@@ -1,0 +1,10 @@
+d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks
+
+astra
+{
+  "clientID": "HpibgpktyBskWZmgDnWYdAFc"
+  "clientSecret": "5eAM0pyf0ICnJn6E6mA+_xHJnuPvPacon1IvndlF_QIC0-W,jyssZ1ORZI,C87.OqX_fd_l6vHdFIn7WQns3yGb.HUYZf4OvC4W,+DpdJ2,_9Cy.AXoZ,UIFNTSwQ4S1"
+  "token": "AstraCS:HpibgpktyBskWZmgDnWYdAFc:f0bf48c8ddcff2780d499b9a0ddef7d8c5e39a45c94f007f45910fa9830413cc"
+}
+
+s88Tvvmy_yPXAi3cyRQbQ1AtPdRTN5Hcd6vFMVsku
