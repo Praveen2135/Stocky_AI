@@ -1,31 +1,7 @@
-import Stocky_AI
-import Stocky_DB_2
-import pandas as pd
-import plotly.graph_objects as go
-import mplfinance as mpf
-from yahoo_fin.stock_info import *
-import datetime as dt
 import streamlit as st
-#from tensorflow.keras.utils import HDF5Matrix
 
-
-SD = Stocky_DB_2.StockyDb()
-SP = Stocky_DB_2.Portfolio()
-SPP = Stocky_DB_2.Store_price()
-
-now=dt.datetime.now()
-while now.strftime("%H:%M") == '23:00' :
-    SPP.save_perv_price()
-    break
-
-
-# UI 
-# TRain and Predict Choies
 with st.sidebar:
-    st.header('Go-To')
-    main_choies = st.radio("",options=('Home',"Predict","Train","Predictions",'Recomendation','Portfolio'))
-
-#main_choies = st.radio("CHOISE ONE",options=('Home',"Predict","Train","Predictions",'Recomendation','Portfolio'))
+    main_choies = st.radio("CHOISE ONE",options=('Home',"Predict","Train","Predictions",'Recomendation','Portfolio'))
 
 if main_choies == "Predict":
     st.header("WIP")
@@ -36,17 +12,6 @@ if main_choies == "Predict":
         st.success("Pridiction done for ticker")
         
 elif main_choies == 'Home':
-    c51,c52,c53 = st.columns(3)
-    index=c51.selectbox('Index',options=('^NSEI','^NSEBANK','^BSESN'))
-    c52.metric(label='^NSEI',value=int(get_live_price('^NSEI')))
-    c53.metric(label='^BSESN',value=int(get_live_price('^BSESN')))
-
-    
-    his=SPP.stock1Mp(index)
-    fig1 = go.Figure()
-    fig1.add_trace(go.Candlestick(x=his['Date'],open=his['Open'],high=his['High'],low=his['Low'],close=his['Close']))
-    st.plotly_chart(fig1)
-
     change_price,N50_list,N50Live=SPP.N50_change()
     c0,c1,c2,c3,c4 = st.columns(5)
     c0.metric(label=N50_list[0],value=int(N50Live[N50_list[0]]),delta=int(change_price[N50_list[0]]))
@@ -127,7 +92,7 @@ elif main_choies == 'Portfolio':
     holdings, cash=SP.get_holdings()
     st.header('Praveen')
     st.subheader('Availabel cash ')
-    st.subheader(int(cash))
+    st.subheader(cash)
     st.table(holdings)
     BorS=st.selectbox('Buy or Sell Action',options=['','Buy','Sell'])
     if BorS == 'Buy':
@@ -145,3 +110,5 @@ elif main_choies == 'Portfolio':
             SP.Sell(ticker,quant)
             
 
+
+st.sidebar.write('shahvn')

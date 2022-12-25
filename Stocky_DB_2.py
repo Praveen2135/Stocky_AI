@@ -4,6 +4,7 @@ import pandas as pd
 import streamlit as st
 import yfinance as yf
 from yahoo_fin.stock_info import *
+import time
 
 class StockyDb:
     def __init__(self):
@@ -85,6 +86,7 @@ class Portfolio():
         self.p_data = self.dbp.get(key='praveen')
         self.cash = self.p_data['cash']
         self.stocks = self.p_data['stocks']
+        self.N50List=tickers_nifty50()
         #return self.p_data['cash']
         #self.S_df = pd.DataFrame(columns=['stock','buy_price','quantity'])
         #self.S_df=self.S_df.append(self.stocks,ignore_index=True)
@@ -213,3 +215,35 @@ class Store_price():
             else:
                 N50_price[i]=get_live_price(i)
         self.dbh.put({'key':'closing price','price':N50_price})
+
+    def live_prices(self):
+        N50_list=tickers_nifty50()
+        N50_price = {}
+        for i in (N50_list):
+            print(i)
+            if i == 'MM.NS':
+                N50_price[i]=get_live_price('M&M.NS')
+            else:
+                N50_price[i]=get_live_price(i)
+        self.dbh.put({'key':'Live prices','price':N50_price})
+        #return N50_price
+
+    def N50_change(self):
+        N50List = tickers_nifty50()
+        closing_price=self.dbh.get(key='closing price')
+        closing_price=closing_price['price']
+        Live_prices=self.dbh.get(key='Live prices')
+        Live_pri=Live_prices['price']
+        change_price={}
+        for i in (N50List):
+            change_price[i]=Live_pri[i]-closing_price[i]
+
+        return change_price,N50List,Live_pri
+
+    def stock1Mp(self,ticker):
+        tick =yf.Ticker(ticker)
+        his = tick.history(period='1mo')
+        his=his.reset_index()
+        his.drop((['Dividends','Stock Splits']),axis=1,inplace=True)
+        his['Date']=pd.to_datetime(his['Date'])
+        return his
