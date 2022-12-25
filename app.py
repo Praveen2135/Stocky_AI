@@ -37,7 +37,7 @@ if main_choies == "Predict":
         
 elif main_choies == 'Home':
     c51,c52,c53 = st.columns(3)
-    index=c51.selectbox('Index',options=('^NSEI','^NSEBANK','^BSESN'))
+    index=(c51.selectbox('Index',options=('^NSEI','^NSEBANK','^BSESN')))
     c52.metric(label='^NSEI',value=int(get_live_price('^NSEI')))
     c53.metric(label='^BSESN',value=int(get_live_price('^BSESN')))
 
