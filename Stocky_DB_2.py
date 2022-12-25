@@ -1,6 +1,9 @@
 from deta import Deta
 import numpy as np
 import pandas as pd
+import streamlit as st
+import yfinance as yf
+from yahoo_fin.stock_info import *
 
 class StockyDb:
     def __init__(self):
@@ -34,3 +37,179 @@ class StockyDb:
             tickers.append(self.db.fetch().items[i]['key'])
         return tickers
     
+    def Recomodation(self):
+        tickers = self.get_all_ticker()
+        buy=[]
+        sell = []
+        
+        for i in tickers:
+            rec={}
+            df=pd.DataFrame(self.ticker_df(i))
+            H_max=df['high'].max()
+            L_min=df['low'].min()
+            H_date=(df[df['high']==H_max])['date'].to_list()
+            L_date=(df[df['low']==L_min])['date'].to_list()
+            if H_date>L_date:
+                price={}
+                price['Ticker']=i
+                price['L_buy_price']=L_min
+                price['H_buy_price']=L_min+(L_min*0.01)
+                price['H_sell_price']=H_max
+                price['L_sell_price']=H_max-(H_max*0.01)
+                price['profit% ']=((price['L_sell_price']-price['H_buy_price'])/price['H_buy_price'])*100
+                buy.append(price)
+            elif H_date<L_date:
+                price={}
+                price['Ticker']=i
+                price['H_sell_price']=H_max
+                price['L_sell_price']=H_max-(H_max*0.01)
+                price['L_buy_price']=L_min
+                price['H_buy_price']=L_min+(L_min*0.01)
+                price['profit% ']=((price['L_sell_price']-price['H_buy_price'])/price['H_buy_price'])*100
+                sell.append(price)
+        
+        buy_df=pd.DataFrame()
+        for i in range (0,len(buy)):
+            buy_df=buy_df.append([buy[i]],ignore_index=True)
+        sell_df=pd.DataFrame()
+        for j in range (0,len(sell)):
+            sell_df=sell_df.append([sell[j]],ignore_index=True)
+        return buy_df,sell_df
+        
+
+# Portfolio
+class Portfolio():
+    def __init__(self):
+        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.dbp = self.deta.Base('StockyAI_portfolio')
+        self.p_data = self.dbp.get(key='praveen')
+        self.cash = self.p_data['cash']
+        self.stocks = self.p_data['stocks']
+        #return self.p_data['cash']
+        #self.S_df = pd.DataFrame(columns=['stock','buy_price','quantity'])
+        #self.S_df=self.S_df.append(self.stocks,ignore_index=True)
+        #print(self.stocks)
+        
+    def Buy (self,ticker,quant):
+        tik= ticker
+        ticker = yf.Ticker(ticker)
+        price = ticker.info
+        if (price['regularMarketPrice']) == None :
+            pre_day_price=ticker.history(period='1d')
+            print(ticker,"Price - ",pre_day_price.iloc[0,3])
+            c_price =pre_day_price.iloc[0,3]
+            quant= quant
+            h_quant = self.stocks[tik]['quantity']
+            amt = c_price*quant
+            h_amt = h_quant*self.stocks[tik]['buy_price']
+            if self.cash >= amt:
+                self.cash=self.cash-amt
+                S_detail={}
+                S_detail['quantity'] = h_quant+quant
+                S_detail['buy_price']= (h_amt+amt)/(h_quant+quant)
+                self.stocks[tik]=S_detail
+                #return self.stocks
+                self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
+                st.success('Stocks Brought')
+                
+            else:
+                st.warning('INSUFICENT BALANCE')
+
+        else:
+            print("Price - ",price['regularMarketPrice'])
+            c_price =price['regularMarketPrice']
+            quant= quant
+            h_quant = self.stocks[tik]['quantity']
+            amt = c_price*quant
+            h_amt = h_quant*self.stocks[tik]['buy_price']
+            if self.cash >= amt:
+                self.cash=self.cash-amt
+                S_detail={}
+                S_detail['quantity'] = h_quant+quant
+                S_detail['buy_price']= (h_amt+amt)/(h_quant+quant)
+                self.stocks[tik]=S_detail
+                #return self.stocks
+                self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
+                st.success('Stocks Brought')
+                
+            else:
+                st.warning('INSUFICENT BALANCE')
+
+    def Sell (self,ticker,quant):
+        tik=ticker
+        ticker = yf.Ticker(ticker)
+        price = ticker.info
+        if (price['regularMarketPrice']) == None :
+            pre_day_price=ticker.history(period='1d')
+            print(ticker,"Price - ",pre_day_price.iloc[0,3])
+            c_price =pre_day_price.iloc[0,3]
+            quant= quant
+            amt = c_price*quant
+            if self.stocks[tik]['quantity']>= quant :
+                self.cash=self.cash+amt
+                r_quant = self.stocks[tik]['quantity']-quant
+                S_details=(self.stocks[tik])
+                S_details['quantity']=r_quant
+                self.stocks[tik]=S_details
+                #print(self.stocks[tik])
+                #return self.stocks
+                self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
+                st.success('Stocks Sold')
+                
+                
+            else:
+                st.warning('INSUFICENT Quantity')
+
+        else:
+            print("Price - ",price['regularMarketPrice'])
+            c_price =price['regularMarketPrice']
+            quant= quant
+            amt = c_price*quant
+            if self.stocks[tik]['quantity']>= quant :
+                self.cash=self.cash+amt
+                r_quant = self.stocks[tik]['quantity']-quant
+                S_details=(self.stocks[tik])
+                S_details['quantity']=r_quant
+                self.stocks[tik]=S_details
+                #print(self.stocks[tik])
+                #return self.stocks
+                self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
+                st.success('Stocks Sold')
+                     
+            else:
+                st.warning('INSUFICENT Quantity')
+
+    def get_holdings(self):
+        #print(self.p_data['stocks'])
+        hold_df = pd.DataFrame(self.p_data['stocks'])
+        hold_df=hold_df.transpose()
+        hold_df=hold_df.reset_index()
+        hold_df['index']=hold_df['index'].astype('str')
+        tiks=hold_df['index'].to_list()
+        prices=[]
+        
+        for i in (tiks):
+            pr = get_live_price(i)
+            prices.append(pr)
+            
+        #hold_df['current price']=hold_df['index'].apply(self.get_current_price)
+        hold_df['current price']=prices
+        hold_df['P&L']= (hold_df['current price']-hold_df['buy_price'])*hold_df['quantity']
+        return hold_df, self.cash
+    
+
+class Store_price():
+    def __init__(self):
+        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.dbh = self.deta.Base('StockyAI_home')
+
+    def save_perv_price(self):
+        N50_list=tickers_nifty50()
+        N50_price = {}
+        for i in (N50_list):
+            print(i)
+            if i == 'MM.NS':
+                N50_price[i]=get_live_price('M&M.NS')
+            else:
+                N50_price[i]=get_live_price(i)
+        self.dbh.put({'key':'closing price','price':N50_price})
