@@ -94,6 +94,7 @@ elif main_choies == 'Home':
     ref_b=st.button("Refreash Live Prices")
     if ref_b:
         SPP.live_prices()
+        st.experimental_rerun()
 
 elif main_choies == 'Train':
     ticker=st.text_input('Ticker')
@@ -131,17 +132,29 @@ elif main_choies == 'Portfolio':
     st.table(holdings)
     BorS=st.selectbox('Buy or Sell Action',options=['','Buy','Sell'])
     if BorS == 'Buy':
-        ticker=st.text_input('Ticker')
-        quant=st.number_input('Quantity',min_value=1,step=1)
-        S_but=st.button('Proced')
-        if S_but :
-            SP.Buy(ticker,quant)
+        B_ticker=st.text_input('Ticker')
+        if B_ticker == "":
+            st.warning('Please Enter Ticker and Press Enter')
+            #st.metric(label=ticker,value= get_live_price(ticker))
+        else:
+            st.metric(label=B_ticker,value= int(get_live_price(B_ticker)))
+            quant=st.number_input('Quantity',min_value=1,step=1)
+            S_but=st.button('Proced')
+            if S_but :
+                SP.Buy(B_ticker,quant)
+                st.experimental_rerun()
 
     elif BorS == 'Sell':
-        ticker=st.text_input('Ticker')
-        quant=st.number_input('Quantity',min_value=1,step=1)
-        S_but=st.button('Proced')
-        if S_but :
-            SP.Sell(ticker,quant)
+        S_ticker=st.text_input('Ticker')
+        if S_ticker == "":
+            st.warning('Please Enter Ticker and Press Enter')
+            #st.metric(label=ticker,value= get_live_price(ticker))
+        else:
+            st.metric(label=S_ticker,value= int(get_live_price(S_ticker)))
+            quant=st.number_input('Quantity',min_value=1,step=1)
+            S_but=st.button('Proced')
+            if S_but :
+                SP.Sell(S_ticker,quant)
+                st.experimental_rerun()
             
 

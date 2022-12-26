@@ -75,6 +75,9 @@ class StockyDb:
         sell_df=pd.DataFrame()
         for j in range (0,len(sell)):
             sell_df=sell_df.append([sell[j]],ignore_index=True)
+
+        buy_df=buy_df[buy_df['profit%']>3]
+        #sell_df=sell_df[sell_df['profit%']>=3]
         return buy_df,sell_df
         
 
@@ -94,15 +97,12 @@ class Portfolio():
         
     def Buy (self,ticker,quant):
         tik= ticker
-        ticker = yf.Ticker(ticker)
-        price = ticker.info
-        if (price['regularMarketPrice']) == None :
-            pre_day_price=ticker.history(period='1d')
-            print(ticker,"Price - ",pre_day_price.iloc[0,3])
-            c_price =pre_day_price.iloc[0,3]
-            quant= quant
+        #ticker = yf.Ticker(ticker)
+        price = get_live_price(tik)
+        quant= quant
+        amt = price*quant
+        if tik in self.stocks.keys():
             h_quant = self.stocks[tik]['quantity']
-            amt = c_price*quant
             h_amt = h_quant*self.stocks[tik]['buy_price']
             if self.cash >= amt:
                 self.cash=self.cash-amt
@@ -112,23 +112,20 @@ class Portfolio():
                 self.stocks[tik]=S_detail
                 #return self.stocks
                 self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
-                st.success('Stocks Brought')
-                
+                st.success('Stocks Brought')      
+                    
             else:
                 st.warning('INSUFICENT BALANCE')
 
+
         else:
-            print("Price - ",price['regularMarketPrice'])
-            c_price =price['regularMarketPrice']
             quant= quant
-            h_quant = self.stocks[tik]['quantity']
-            amt = c_price*quant
-            h_amt = h_quant*self.stocks[tik]['buy_price']
+            amt = price*quant
             if self.cash >= amt:
                 self.cash=self.cash-amt
                 S_detail={}
-                S_detail['quantity'] = h_quant+quant
-                S_detail['buy_price']= (h_amt+amt)/(h_quant+quant)
+                S_detail['quantity'] = quant
+                S_detail['buy_price']= price
                 self.stocks[tik]=S_detail
                 #return self.stocks
                 self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
@@ -139,47 +136,26 @@ class Portfolio():
 
     def Sell (self,ticker,quant):
         tik=ticker
-        ticker = yf.Ticker(ticker)
-        price = ticker.info
-        if (price['regularMarketPrice']) == None :
-            pre_day_price=ticker.history(period='1d')
-            print(ticker,"Price - ",pre_day_price.iloc[0,3])
-            c_price =pre_day_price.iloc[0,3]
-            quant= quant
-            amt = c_price*quant
-            if self.stocks[tik]['quantity']>= quant :
-                self.cash=self.cash+amt
-                r_quant = self.stocks[tik]['quantity']-quant
-                S_details=(self.stocks[tik])
-                S_details['quantity']=r_quant
-                self.stocks[tik]=S_details
-                #print(self.stocks[tik])
-                #return self.stocks
-                self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
-                st.success('Stocks Sold')
-                
-                
-            else:
-                st.warning('INSUFICENT Quantity')
+        price = get_live_price(tik)
+        quant= quant
+        amt = price*quant
+        if self.stocks[tik]['quantity']>= quant :
+            self.cash=self.cash+amt
+            r_quant = self.stocks[tik]['quantity']-quant
+            S_details=(self.stocks[tik])
+            S_details['quantity']=r_quant
+            self.stocks[tik]=S_details
+            #print(self.stocks[tik])
+            #return self.stocks
+            self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
+            st.success('Stocks Sold') 
+
+        elif tik not in self.stocks.keys():
+            st.warning("Short sell is not Allowed...!")
 
         else:
-            print("Price - ",price['regularMarketPrice'])
-            c_price =price['regularMarketPrice']
-            quant= quant
-            amt = c_price*quant
-            if self.stocks[tik]['quantity']>= quant :
-                self.cash=self.cash+amt
-                r_quant = self.stocks[tik]['quantity']-quant
-                S_details=(self.stocks[tik])
-                S_details['quantity']=r_quant
-                self.stocks[tik]=S_details
-                #print(self.stocks[tik])
-                #return self.stocks
-                self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
-                st.success('Stocks Sold')
-                     
-            else:
                 st.warning('INSUFICENT Quantity')
+
 
     def get_holdings(self):
         #print(self.p_data['stocks'])
@@ -197,6 +173,9 @@ class Portfolio():
         #hold_df['current price']=hold_df['index'].apply(self.get_current_price)
         hold_df['current price']=prices
         hold_df['P&L']= (hold_df['current price']-hold_df['buy_price'])*hold_df['quantity']
+        hold_df['P&L in %']= (hold_df['P&L']/(hold_df['buy_price']*hold_df['quantity']))*100
+        hold_df=hold_df[hold_df['quantity']>0]
+        hold_df['quantity']=hold_df['quantity'].astype('int')
         return hold_df, self.cash
     
 
@@ -226,6 +205,8 @@ class Store_price():
             else:
                 N50_price[i]=get_live_price(i)
         self.dbh.put({'key':'Live prices','price':N50_price})
+        time.sleep(5)
+        st.experimental_rerun()
         #return N50_price
 
     def N50_change(self):
