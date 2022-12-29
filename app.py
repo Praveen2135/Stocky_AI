@@ -14,8 +14,6 @@ SP = Stocky_DB_2.Portfolio()
 SPP = Stocky_DB_2.Store_price()
 SUI = Stocky_DB_2.Ticker_UI()
 
-
-
 # UI 
 # TRain and Predict Choies
 with st.sidebar:
