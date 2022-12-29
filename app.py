@@ -136,7 +136,8 @@ elif main_choies == 'Portfolio':
             st.warning('Please Enter Ticker and Press Enter')
             #st.metric(label=ticker,value= get_live_price(ticker))
         else:
-            st.metric(label=B_ticker,value= int(get_live_price(B_ticker)))
+            name,C_price,C_change=SUI.live_stock(B_ticker)
+            st.metric(label=name,value=C_price,delta=C_change)
             quant=p3.number_input('Quantity',min_value=1,step=1)
             S_but=st.button('Proced')
             if S_but :
@@ -149,7 +150,8 @@ elif main_choies == 'Portfolio':
             st.warning('Please Enter Ticker and Press Enter')
             #st.metric(label=ticker,value= get_live_price(ticker))
         else:
-            st.metric(label=S_ticker,value= int(get_live_price(S_ticker)))
+            name,C_price,C_change=SUI.live_stock(S_ticker)
+            st.metric(label=name,value=C_price,delta=C_change)
             quant=p3.number_input('Quantity',min_value=1,step=1)
             S_but=st.button('Proced')
             if S_but :

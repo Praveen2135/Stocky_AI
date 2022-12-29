@@ -237,7 +237,7 @@ class Ticker_UI():
         today=dt.datetime.now().strftime('%Y-%m-%d')
         u1,u2,u3=st.columns(3)
         u1.header(ticker)
-        U_sele=u2.selectbox('Select period',options=('1 month','3 months','6 months','1 year','5 years'))
+        U_sele=u3.selectbox('Select period',options=('1 month','3 months','6 months','1 year','5 years'))
         E_date=""
         if U_sele == "1 month":
             E_date=(dt.datetime.today()-dt.timedelta(30)).strftime('%Y-%m-%d')
@@ -251,6 +251,8 @@ class Ticker_UI():
             E_date=(dt.datetime.today()-dt.timedelta(1825)).strftime('%Y-%m-%d')
         df=get_data(ticker,start_date=E_date,end_date=today)['close']
         st.line_chart(data=df)
+        
+
 
     def Stock_details(self,ticker):
         details = get_quote_data(ticker)
@@ -260,3 +262,10 @@ class Ticker_UI():
             laa.append(details[i])
         df = pd.DataFrame(laa,index=L_ofItems)
         return df
+
+    def live_stock(self,ticker):
+        details=get_quote_data(ticker)
+        name = details['longName']
+        C_price = round(details['regularMarketPrice'],2)
+        C_change = round(details['regularMarketChange'],2)
+        return name,C_price,C_change
