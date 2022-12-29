@@ -175,7 +175,7 @@ class Portfolio():
         hold_df['current price']=prices
         hold_df['P&L']= (hold_df['current price']-hold_df['buy_price'])*hold_df['quantity']
         hold_df['P&L in %']= (hold_df['P&L']/(hold_df['buy_price']*hold_df['quantity']))*100
-        #hold_df=hold_df[hold_df['quantity']>0]
+        hold_df=hold_df[hold_df['quantity']>0]
         hold_df['quantity']=hold_df['quantity'].astype('int')
         return hold_df, self.cash
     
