@@ -249,10 +249,9 @@ class Ticker_UI():
             E_date=(dt.datetime.today()-dt.timedelta(365)).strftime('%Y-%m-%d')
         elif U_sele == '5 years':
             E_date=(dt.datetime.today()-dt.timedelta(1825)).strftime('%Y-%m-%d')
+
         df=get_data(ticker,start_date=E_date,end_date=today)['close']
         st.line_chart(data=df)
-        
-
 
     def Stock_details(self,ticker):
         details = get_quote_data(ticker)
