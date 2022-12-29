@@ -12,23 +12,20 @@ import streamlit as st
 SD = Stocky_DB_2.StockyDb()
 SP = Stocky_DB_2.Portfolio()
 SPP = Stocky_DB_2.Store_price()
+SUI = Stocky_DB_2.Ticker_UI()
 
-now=dt.datetime.now()
-while now.strftime("%H:%M") == '23:00' :
-    SPP.save_perv_price()
-    break
 
 
 # UI 
 # TRain and Predict Choies
 with st.sidebar:
     st.header('Go-To')
-    main_choies = st.radio("",options=('Home',"Predict","Train","Predictions",'Recomendation','Portfolio'))
+    main_choies = st.radio("",options=('Home',"Predict","Train","Predictions",'Recomendation','Portfolio','Search'))
 
 #main_choies = st.radio("CHOISE ONE",options=('Home',"Predict","Train","Predictions",'Recomendation','Portfolio'))
 
 if main_choies == "Predict":
-    st.header("WIP")
+    #st.header("WIP")
     ticker=st.text_input('Ticker')
     predictB = st.button('Predict')
     if predictB:
@@ -38,8 +35,8 @@ if main_choies == "Predict":
 elif main_choies == 'Home':
     c51,c52,c53 = st.columns(3)
     index=(c51.selectbox('Index',options=('^NSEI','^NSEBANK','^BSESN')))
-    c52.metric(label='^NSEI',value=int(get_live_price('^NSEI')))
-    c53.metric(label='^BSESN',value=int(get_live_price('^BSESN')))
+    c52.metric(label='^NSEI',value=int(get_live_price('^NSEI')),delta=get_quote_data('^NSEI')['regularMarketChange'])
+    c53.metric(label='^BSESN',value=int(get_live_price('^BSESN')),delta=get_quote_data('^BSESN')['regularMarketChange'])
 
     
     his=SPP.stock1Mp(index)
@@ -47,7 +44,9 @@ elif main_choies == 'Home':
     fig1.add_trace(go.Candlestick(x=his['Date'],open=his['Open'],high=his['High'],low=his['Low'],close=his['Close']))
     st.plotly_chart(fig1)
 
-    change_price,N50_list,N50Live=SPP.N50_change()
+    #change_price,N50_list,N50Live=SPP.N50_change()
+    N50_list = tickers_nifty50()
+    N50Live,change_price = SPP.live_prices()
     c0,c1,c2,c3,c4 = st.columns(5)
     c0.metric(label=N50_list[0],value=int(N50Live[N50_list[0]]),delta=int(change_price[N50_list[0]]))
     c1.metric(label=N50_list[1],value=int(N50Live[N50_list[1]]),delta=int(change_price[N50_list[1]]))
@@ -90,10 +89,11 @@ elif main_choies == 'Home':
     c28.metric(label=N50_list[28],value=int(N50Live[N50_list[28]]),delta=int(change_price[N50_list[28]]))
     c29.metric(label=N50_list[29],value=int(N50Live[N50_list[29]]),delta=int(change_price[N50_list[29]]))
 
+
     #style_metric_cards(border_left_color='#1E1E1E')
     ref_b=st.button("Refreash Live Prices")
     if ref_b:
-        SPP.live_prices()
+        SPP.save_perv_price()
         st.experimental_rerun()
 
 elif main_choies == 'Train':
@@ -130,31 +130,42 @@ elif main_choies == 'Portfolio':
     st.subheader('Availabel cash ')
     st.subheader(int(cash))
     st.table(holdings)
-    BorS=st.selectbox('Buy or Sell Action',options=['','Buy','Sell'])
+    p1,p2,p3 = st.columns(3)
+    BorS=p1.selectbox('Buy or Sell Action',options=['','Buy','Sell'])
     if BorS == 'Buy':
-        B_ticker=st.text_input('Ticker')
+        B_ticker=p2.text_input('Ticker')
         if B_ticker == "":
             st.warning('Please Enter Ticker and Press Enter')
             #st.metric(label=ticker,value= get_live_price(ticker))
         else:
             st.metric(label=B_ticker,value= int(get_live_price(B_ticker)))
-            quant=st.number_input('Quantity',min_value=1,step=1)
+            quant=p3.number_input('Quantity',min_value=1,step=1)
             S_but=st.button('Proced')
             if S_but :
                 SP.Buy(B_ticker,quant)
                 st.experimental_rerun()
 
     elif BorS == 'Sell':
-        S_ticker=st.text_input('Ticker')
+        S_ticker=p2.text_input('Ticker')
         if S_ticker == "":
             st.warning('Please Enter Ticker and Press Enter')
             #st.metric(label=ticker,value= get_live_price(ticker))
         else:
             st.metric(label=S_ticker,value= int(get_live_price(S_ticker)))
-            quant=st.number_input('Quantity',min_value=1,step=1)
+            quant=p3.number_input('Quantity',min_value=1,step=1)
             S_but=st.button('Proced')
             if S_but :
                 SP.Sell(S_ticker,quant)
                 st.experimental_rerun()
             
 
+elif main_choies == 'Search':
+    ticker=st.sidebar.text_input("Search Ticker")
+
+    if ticker == "":
+        st.warning('Please enter Ticker')
+
+    else:
+        SUI.Plot(ticker)
+        df = SUI.Stock_details(ticker)
+        st.table(df)

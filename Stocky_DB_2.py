@@ -5,6 +5,7 @@ import streamlit as st
 import yfinance as yf
 from yahoo_fin.stock_info import *
 import time
+import datetime as dt
 
 class StockyDb:
     def __init__(self):
@@ -66,17 +67,17 @@ class StockyDb:
                 price['L_sell_price']=H_max-(H_max*0.01)
                 price['L_buy_price']=L_min
                 price['H_buy_price']=L_min+(L_min*0.01)
-                price['profit% ']=((price['L_sell_price']-price['H_buy_price'])/price['H_buy_price'])*100
+                price['profit%']=((price['L_sell_price']-price['H_buy_price'])/price['H_buy_price'])*100
                 sell.append(price)
         
         buy_df=pd.DataFrame()
         for i in range (0,len(buy)):
             buy_df=buy_df.append([buy[i]],ignore_index=True)
+        #buy_df[buy_df['profit']>3]
         sell_df=pd.DataFrame()
         for j in range (0,len(sell)):
             sell_df=sell_df.append([sell[j]],ignore_index=True)
 
-        buy_df=buy_df[buy_df['profit%']>3]
         #sell_df=sell_df[sell_df['profit%']>=3]
         return buy_df,sell_df
         
@@ -174,12 +175,13 @@ class Portfolio():
         hold_df['current price']=prices
         hold_df['P&L']= (hold_df['current price']-hold_df['buy_price'])*hold_df['quantity']
         hold_df['P&L in %']= (hold_df['P&L']/(hold_df['buy_price']*hold_df['quantity']))*100
-        hold_df=hold_df[hold_df['quantity']>0]
+        #hold_df=hold_df[hold_df['quantity']>0]
         hold_df['quantity']=hold_df['quantity'].astype('int')
         return hold_df, self.cash
     
 
 class Store_price():
+
     def __init__(self):
         self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
         self.dbh = self.deta.Base('StockyAI_home')
@@ -187,32 +189,29 @@ class Store_price():
     def save_perv_price(self):
         N50_list=tickers_nifty50()
         N50_price = {}
+        N50_price_live = {}
         for i in (N50_list):
             print(i)
             if i == 'MM.NS':
-                N50_price[i]=get_live_price('M&M.NS')
+                N50_price[i]=get_quote_data('M&M.NS')['regularMarketChange']
+                N50_price_live[i]= get_quote_data('M&M.NS')['regularMarketPrice']
             else:
-                N50_price[i]=get_live_price(i)
-        self.dbh.put({'key':'closing price','price':N50_price})
+                N50_price[i]=get_quote_data(i)['regularMarketChange']
+                N50_price_live[i]= get_quote_data(i)['regularMarketPrice']
+        self.dbh.put({'key':'change','price': N50_price})
+        self.dbh.put({'key':'Live','price': N50_price_live})
+        return N50_list
 
     def live_prices(self):
-        N50_list=tickers_nifty50()
-        N50_price = {}
-        for i in (N50_list):
-            print(i)
-            if i == 'MM.NS':
-                N50_price[i]=get_live_price('M&M.NS')
-            else:
-                N50_price[i]=get_live_price(i)
-        self.dbh.put({'key':'Live prices','price':N50_price})
-        time.sleep(5)
-        st.experimental_rerun()
-        #return N50_price
+        live =self.dbh.get(key='Live')
+        change = self.dbh.get(key='change')
+        live = live['price']
+        change = change['price']
+        return live,change
+
 
     def N50_change(self):
         N50List = tickers_nifty50()
-        closing_price=self.dbh.get(key='closing price')
-        closing_price=closing_price['price']
         Live_prices=self.dbh.get(key='Live prices')
         Live_pri=Live_prices['price']
         change_price={}
@@ -222,9 +221,42 @@ class Store_price():
         return change_price,N50List,Live_pri
 
     def stock1Mp(self,ticker):
+
         tick =yf.Ticker(ticker)
         his = tick.history(period='1mo')
         his=his.reset_index()
         his.drop((['Dividends','Stock Splits']),axis=1,inplace=True)
         his['Date']=pd.to_datetime(his['Date'])
         return his
+
+class Ticker_UI():
+    def __init__(self):
+        pass
+
+    def Plot(self,ticker):
+        today=dt.datetime.now().strftime('%Y-%m-%d')
+        u1,u2,u3=st.columns(3)
+        u1.header(ticker)
+        U_sele=u2.selectbox('Select period',options=('1 month','3 months','6 months','1 year','5 years'))
+        E_date=""
+        if U_sele == "1 month":
+            E_date=(dt.datetime.today()-dt.timedelta(30)).strftime('%Y-%m-%d')
+        elif U_sele == '3 months':
+            E_date=(dt.datetime.today()-dt.timedelta(91)).strftime('%Y-%m-%d')
+        elif U_sele == '6 months':
+            E_date=(dt.datetime.today()-dt.timedelta(183)).strftime('%Y-%m-%d')
+        elif U_sele == '1 year':
+            E_date=(dt.datetime.today()-dt.timedelta(365)).strftime('%Y-%m-%d')
+        elif U_sele == '5 years':
+            E_date=(dt.datetime.today()-dt.timedelta(1825)).strftime('%Y-%m-%d')
+        df=get_data(ticker,start_date=E_date,end_date=today)['close']
+        st.line_chart(data=df)
+
+    def Stock_details(self,ticker):
+        details = get_quote_data(ticker)
+        L_ofItems=['longName','regularMarketChangePercent','regularMarketPrice','fiftyTwoWeekLow','fiftyTwoWeekHigh','fiftyDayAverage','twoHundredDayAverage','regularMarketChange','regularMarketDayHigh','regularMarketDayLow','regularMarketPreviousClose']
+        laa = []
+        for i in (L_ofItems):
+            laa.append(details[i])
+        df = pd.DataFrame(laa,index=L_ofItems)
+        return df
