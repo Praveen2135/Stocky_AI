@@ -6,6 +6,8 @@ import yfinance as yf
 from yahoo_fin.stock_info import *
 import time
 import datetime as dt
+import json
+import requests
 
 class StockyDb:
     def __init__(self):
@@ -229,6 +231,22 @@ class Store_price():
         his['Date']=pd.to_datetime(his['Date'])
         return his
 
+    def trained_tickers(self,ticker):
+        T_list=[]
+        T_T=self.dbh.get(key='trained_T')
+        T_list = T_T['price']
+        T_list.append(ticker)
+        T_list=set(T_list)
+        T_list = list(T_list)
+        dbh.put({'key':'trained_T','price':T_list})
+
+    def get_T_tickers(self):
+        T_T=self.dbh.get(key='trained_T')
+        T_T = T_T['price']
+        #T_T = set(T_T)
+        return T_T
+
+
 class Ticker_UI():
     def __init__(self):
         pass
@@ -268,3 +286,10 @@ class Ticker_UI():
         C_price = round(details['regularMarketPrice'],2)
         C_change = round(details['regularMarketChange'],2)
         return name,C_price,C_change
+
+    def load_lottiurl(self,url: str):
+        r = requests.get(url)
+        if r.status_code != 200:
+            return None
+        
+        return r.json()

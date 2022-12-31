@@ -12,6 +12,12 @@ import matplotlib.pyplot as plt
 import datetime as dt
 import tensorflow as tf
 import Stocky_DB_2
+import streamlit as st
+from streamlit_lottie import st_lottie
+import Stocky_DB_2
+
+SUI = Stocky_DB_2.Ticker_UI()
+loader=SUI.load_lottiurl('https://assets7.lottiefiles.com/packages/lf20_gbfwtkzw.json')
 
 class StockyAiTrain:
     
@@ -99,19 +105,26 @@ class StockyAiTrain:
         
         
         # Model Trainging
+        c1,c2 = st.columns(2)
         tf.config.run_functions_eagerly(True)
-        print('Opening sctock price training Started....')
+        c1.write('''Opening sctock price training Started....''')
+        st_lottie(loader,height=100,width=100, key='loader')
         history_open = model_open.fit(self.trainX, self.trainY_open, epochs=24, batch_size= 12, validation_split= 0.1, verbose =1 )
-        print('Opening sctock price training Ended....')
-        print('High sctock price training Started....')
+        c1.write('''Opening sctock price training Ended....''')
+        c1.write('''High sctock price training Started....''')
         history_high = model_high.fit(self.trainX, self.trainY_high, epochs=24, batch_size= 12, validation_split= 0.1, verbose =1 )
-        print('High sctock price training Ended....')
-        print('Low sctock price training Started....')
+        c1.write('''High sctock price training Ended....''')
+        c1.write('''Low sctock price training Started....''')
         history_low = model_low.fit(self.trainX, self.trainY_low, epochs=24, batch_size= 12, validation_split= 0.1, verbose =1 )
-        print('Low sctock price training Ended....')
-        print('Closeing sctock price training Started....')
+        c1.write('Low sctock price training Ended....')
+        c1.write('Closeing sctock price training Started....')
         history_close = model_close.fit(self.trainX, self.trainY_close, epochs=24, batch_size= 12, validation_split= 0.1, verbose =1 )
-        print('Closeing sctock price training Ended....')
+        c1.write('''Closeing sctock price training Ended....''')
+        st.subheader('Training Completed...')
+        comp=SUI.load_lottiurl('https://assets5.lottiefiles.com/packages/lf20_uk52xbuq.json')
+        st_lottie(comp,height=100,width=100, key='comp')
+
+
         
         #Exporting PKL
         model_open.save('Models/{}_open.h5'.format(self.ticker))
