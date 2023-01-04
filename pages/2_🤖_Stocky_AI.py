@@ -43,7 +43,7 @@ elif selected == 'Train':
     ticker=st.text_input('Ticker')
     trainB=st.button('Train')
     if trainB:
-        st_lottie(coder,height=250,width=250, key='coder')
+        st_l(coder,height=250,width=250, key='coder')
         Stocky_AI.StockyAiTrain(ticker)
         st.success('Stocky AI started Learning abount ticker')
         SPP.trained_tickers(ticker)
