@@ -8,7 +8,7 @@ import datetime as dt
 import streamlit as st
 #from tensorflow.keras.utils import HDF5Matrix
 
-st.session_state['starter']=1
+st.session_state['authentication_status'] = ""
 
 SD = Stocky_DB_2.StockyDb()
 SP = Stocky_DB_2.Portfolio()
