@@ -12,7 +12,7 @@ SUI = Stocky_DB_2.Ticker_UI()
 
 if st.session_state['authentication_status']:
     holdings, cash=SP.get_holdings()
-    st.header(st.session_state)
+    st.header(st.session_state['name'])
     st.subheader('Availabel cash ')
     st.subheader(int(cash))
     st.table(holdings)
