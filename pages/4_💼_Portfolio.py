@@ -21,6 +21,10 @@ if st.session_state['authentication_status']:
     p4,p5,p6 = st.columns(3)
     BorS=p1.selectbox('Buy or Sell Action',options=['','Buy','Sell'])
     T_button=p4.button('Transactions')
+    if T_button:
+        T_df=SP.get_transactions(user)
+        st.table(T_df)
+        
     if BorS == 'Buy':
         B_ticker=p2.text_input('Ticker')
         if B_ticker == "":
@@ -55,6 +59,4 @@ if st.session_state['authentication_status']:
 else:
     st.warning('Please login')
     
-    if T_button:
-        T_df=SP.get_transactions(user)
-        st.table(T_df)
+    
