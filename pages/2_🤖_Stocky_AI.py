@@ -31,6 +31,7 @@ if selected == "Predict":
     T_T=SPP.get_T_tickers()
     ticker = st.selectbox('Select from trained Tickers',options=(T_T))
     predictB = st.button('Predict')
+    st.write("Note:- If Ticker is not availabile in Drop-down, Please Go-to Train and Train the Stocky AI.")
     #st_lottie(robot,height=250,width=250, key='hello')
     if predictB:
         st_l.st_lottie(AI,height=250,width=250, key='AI')
@@ -42,6 +43,9 @@ elif selected == 'Train':
     coder=SUI.load_lottiurl('https://assets7.lottiefiles.com/packages/lf20_ne6kcqfz.json')
     ticker=st.text_input('Ticker')
     trainB=st.button('Train')
+    st.write('''Note:- Please enter the Ticker as per Yahoo Finance and click on Train,
+                        If you want you can Quit it can train it self.
+                        You will get your ticker in Pridect Drop-down if its Trained''')
     if trainB:
         st_l.st_lottie(coder,height=250,width=250, key='coder')
         Stocky_AI.StockyAiTrain(ticker)
@@ -60,3 +64,6 @@ elif selected == 'Predictions':
         fig = go.Figure()
         fig.add_trace(go.Candlestick(x=T_df['date'],open=T_df['open'],high=T_df['high'],low=T_df['low'],close=T_df['close']))
         st.plotly_chart(fig)
+    st.write("Note:- Here all predtcted Stock Prices are available.")
+    st.write("If you want to pridect the price from today, Please go-to Pridict")
+    st.write("If you want to Train Stocky AI on any new stock Go-to Train")

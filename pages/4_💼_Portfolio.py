@@ -10,12 +10,7 @@ SP = Stocky_DB_2.Portfolio()
 SUI = Stocky_DB_2.Ticker_UI()
 
 
-if st.session_state['authentication_status'] == False:
-    st.warning('Please login')
-    
-
-else:
-    
+if st.session_state['authentication_status']:
     holdings, cash=SP.get_holdings()
     st.header(st.session_state)
     st.subheader('Availabel cash ')
@@ -50,3 +45,8 @@ else:
             if S_but :
                 SP.Sell(S_ticker,quant)
                 st.experimental_rerun()
+
+else:
+    st.warning('Please login')
+    
+        

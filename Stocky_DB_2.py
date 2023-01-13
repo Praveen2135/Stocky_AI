@@ -87,12 +87,14 @@ class StockyDb:
 # Portfolio
 class Portfolio():
     def __init__(self):
+        self.user_name = self.get_user_name()
         self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
         self.dbp = self.deta.Base('StockyAI_portfolio')
-        self.p_data = self.dbp.get(key='praveen')
+        self.p_data = self.dbp.get(key=self.user_name)
         self.cash = self.p_data['cash']
         self.stocks = self.p_data['stocks']
         self.N50List=tickers_nifty50()
+        
         #return self.p_data['cash']
         #self.S_df = pd.DataFrame(columns=['stock','buy_price','quantity'])
         #self.S_df=self.S_df.append(self.stocks,ignore_index=True)
@@ -180,6 +182,15 @@ class Portfolio():
         hold_df=hold_df[hold_df['quantity']>0]
         hold_df['quantity']=hold_df['quantity'].astype('int')
         return hold_df, self.cash
+
+    def get_user_name(self):
+        User_N=""
+        if st.session_state['authentication_status']:
+            User_N = st.session_state['username']
+        else:
+            User_N='dume'
+
+        return User_N
     
 
 class Store_price():
@@ -300,6 +311,7 @@ class credintials():
         self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
         self.dbc = self.deta.Base('credintials')
         self.dbp = self.deta.Base('StockyAI_portfolio')
+        self.dbf = self.deta.Base('feedback')
 
     def credintials_update(self,dictnory):
         self.dbc.put({"key":"credintials",'user':dictnory})
@@ -313,11 +325,11 @@ class credintials():
 
     def creat_portfolio(self,user_name):
 
-        self.dbp.put({'key':user_name,'cash':100000,'stocks':{"demo": {
-    "buy_price": 0,
-    "quantity": 0
-  }}})
+        self.dbp.put({'key':user_name,'cash':100000,'stocks':{"demo": {"buy_price": 0,"quantity": 0}}})
                 
+
+    def get_feedback(self,name,feedback):
+        self.dbf.put({'key':name,'Feedback':feedback})
 
 
         
