@@ -238,7 +238,7 @@ class Store_price():
         T_list.append(ticker)
         T_list=set(T_list)
         T_list = list(T_list)
-        dbh.put({'key':'trained_T','price':T_list})
+        self.dbh.put({'key':'trained_T','price':T_list})
 
     def get_T_tickers(self):
         T_T=self.dbh.get(key='trained_T')
@@ -293,3 +293,32 @@ class Ticker_UI():
             return None
         
         return r.json()
+
+
+class credintials():
+    def __init__(self):
+        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.dbc = self.deta.Base('credintials')
+        self.dbp = self.deta.Base('StockyAI_portfolio')
+
+    def credintials_update(self,dictnory):
+        self.dbc.put({"key":"credintials",'user':dictnory})
+        #self.dbc.put({'key':'credintials','users':{"praveen":{'name':'Praveen Kumar','password':'$2b$12$f3FHtJKI64LUWzhPRiEvU.VOQfwzwfy0mVD.JJU6fkYzTbz5AptKu','email':'praveen9090002135@gmail.com'}}})
+        
+
+    def credintials_get(self):
+        keys=self.dbc.get(key='credintials')
+        credintials=keys['user']
+        return credintials
+
+    def creat_portfolio(self,user_name):
+
+        self.dbp.put({'key':user_name,'cash':100000,'stocks':{"demo": {
+    "buy_price": 0,
+    "quantity": 0
+  }}})
+                
+
+
+        
+

@@ -76,3 +76,6 @@ ref_b=st.button("Refreash Live Prices")
 if ref_b:
     SPP.save_perv_price()
     st.experimental_rerun()
+
+
+#print(st.session_state['authentication_status'])
