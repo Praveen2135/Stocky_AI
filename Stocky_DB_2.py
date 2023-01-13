@@ -90,10 +90,12 @@ class Portfolio():
         self.user_name = self.get_user_name()
         self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
         self.dbp = self.deta.Base('StockyAI_portfolio')
+        self.db_tran = self.deta.Base('transactions')
         self.p_data = self.dbp.get(key=self.user_name)
         self.cash = self.p_data['cash']
         self.stocks = self.p_data['stocks']
         self.N50List=tickers_nifty50()
+        self.now = dt.datetime.now()
         
         #return self.p_data['cash']
         #self.S_df = pd.DataFrame(columns=['stock','buy_price','quantity'])
@@ -116,7 +118,7 @@ class Portfolio():
                 S_detail['buy_price']= (h_amt+amt)/(h_quant+quant)
                 self.stocks[tik]=S_detail
                 #return self.stocks
-                self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
+                self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
                 st.success('Stocks Brought')      
                     
             else:
@@ -133,7 +135,7 @@ class Portfolio():
                 S_detail['buy_price']= price
                 self.stocks[tik]=S_detail
                 #return self.stocks
-                self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
+                self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
                 st.success('Stocks Brought')
                 
             else:
@@ -152,7 +154,7 @@ class Portfolio():
             self.stocks[tik]=S_details
             #print(self.stocks[tik])
             #return self.stocks
-            self.dbp.put({'key':'praveen','cash':self.cash,'stocks':self.stocks})
+            self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
             st.success('Stocks Sold') 
 
         elif tik not in self.stocks.keys():
@@ -191,6 +193,27 @@ class Portfolio():
             User_N='dume'
 
         return User_N
+
+    def Transactions(self,user,ticker,price,quantity,str):
+        date = self.now.strftime("%d-%m-%Y")
+        trans=self.db_tran.get(key=user)['transaction']
+        trans.append({'Date':date,'Ticker':ticker,'Price':price,'Quantity':quantity,'Action':str})
+        self.db_tran.put({'key':user,'transaction':trans})
+
+    def Demo_Trans(self,user):
+        self.db_tran.put({'key':user,'transaction':[]})
+
+
+    def get_transactions(self,user):
+        tran=self.db_tran.get(key=user)['transaction']
+        T_df = pd.DataFrame(tran)
+        T_df=T_df[['Date','Ticker','Price','Quantity','Action']]
+        return T_df
+
+
+
+
+
     
 
 class Store_price():
@@ -304,6 +327,7 @@ class Ticker_UI():
             return None
         
         return r.json()
+
 
 
 class credintials():

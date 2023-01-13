@@ -4,6 +4,7 @@ import Stocky_DB_2
 import bcrypt
 
 cred = Stocky_DB_2.credintials()
+trans = Stocky_DB_2.Portfolio()
 
 #u_names,u_details = credintials.credintials_get()
 
@@ -36,6 +37,7 @@ elif select=='Sing Up':
             user_name = next(iter(reversed(credentials["usernames"])))
             cred.credintials_update(credentials)
             cred.creat_portfolio(user_name)
+            trans.Demo_Trans(user_name)
             st.success('User registered successfully')
             st.experimental_rerun()
     except Exception as e:
