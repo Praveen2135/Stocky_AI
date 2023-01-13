@@ -55,6 +55,6 @@ if st.session_state['authentication_status']:
 else:
     st.warning('Please login')
     
-if T_button:
-    T_df=SP.get_transactions(user)
-    st.table(T_df)
+    if T_button:
+        T_df=SP.get_transactions(user)
+        st.table(T_df)
