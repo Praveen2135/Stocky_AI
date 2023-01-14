@@ -1,6 +1,9 @@
 import streamlit as st
 import Stocky_DB_2
 
+if st.session_state == {}:
+    st.session_state['authentication_status'] = ""
+    
 SD = Stocky_DB_2.StockyDb()
 
 if st.session_state['authentication_status']:
