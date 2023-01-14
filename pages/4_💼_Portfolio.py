@@ -20,10 +20,12 @@ if st.session_state['authentication_status']:
     st.subheader('Availabel cash ')
     st.subheader(int(cash))
     st.table(holdings)
-    p1,p2,p3 = st.columns(3)
     p4,p5,p6 = st.columns(3)
-    BorS=p1.selectbox('Buy or Sell Action',options=['','Buy','Sell'])
     T_button=p4.button('Transactions')
+    p1,p2,p3 = st.columns(3)
+    
+    BorS=p1.selectbox('Buy or Sell Action',options=['','Buy','Sell'])
+    
     if T_button:
         T_df=SP.get_transactions(user)
         st.table(T_df)

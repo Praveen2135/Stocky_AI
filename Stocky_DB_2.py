@@ -119,11 +119,13 @@ class Portfolio():
                 self.stocks[tik]=S_detail
                 #return self.stocks
                 self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
-                self.Transactions(self.user_name,ticker,price,quant,'Buy')
-                st.success('Stocks Brought')      
+                #self.Transactions(self.user_name,ticker,price,quant,'Buy')
+                st.success('Stocks Brought')   
+                return True   
                     
             else:
                 st.warning('INSUFICENT BALANCE')
+                return False
 
 
         else:
@@ -137,11 +139,13 @@ class Portfolio():
                 self.stocks[tik]=S_detail
                 #return self.stocks
                 self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
-                self.Transactions(self.user_name,tik,price,quant,"Buy")
+                #self.Transactions(self.user_name,tik,price,quant,"Buy")
                 st.success('Stocks Brought')
+                return True
                 
             else:
                 st.warning('INSUFICENT BALANCE')
+                return False
 
     def Sell (self,ticker,quant):
         tik=ticker
@@ -157,14 +161,17 @@ class Portfolio():
             #print(self.stocks[tik])
             #return self.stocks
             self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
-            self.Transactions(self.user_name,tik,price,quant,"Sell")
-            st.success('Stocks Sold') 
+            #self.Transactions(self.user_name,tik,price,quant,"Sell")
+            st.success('Stocks Sold')
+            return True
 
         elif tik not in self.stocks.keys():
             st.warning("Short sell is not Allowed...!")
+            return False
 
         else:
-                st.warning('INSUFICENT Quantity')
+            st.warning('INSUFICENT Quantity')
+            return False
 
 
     def get_holdings(self):
@@ -339,6 +346,7 @@ class credintials():
         self.dbc = self.deta.Base('credintials')
         self.dbp = self.deta.Base('StockyAI_portfolio')
         self.dbf = self.deta.Base('feedback')
+        self.now = dt.datetime.now()
 
     def credintials_update(self,dictnory):
         self.dbc.put({"key":"credintials",'user':dictnory})
@@ -356,7 +364,8 @@ class credintials():
                 
 
     def get_feedback(self,name,feedback):
-        self.dbf.put({'key':name,'Feedback':feedback})
+        date = self.now.strftime("%d-%m-%Y")
+        self.dbf.put({'key':name,'Date':date,'Feedback':feedback})
 
 
         
