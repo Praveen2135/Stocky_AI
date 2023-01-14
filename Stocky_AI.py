@@ -14,8 +14,8 @@ import tensorflow as tf
 import Stocky_DB_2
 import streamlit as st
 from streamlit_lottie import st_lottie
-import Stocky_DB_2
 
+SPP = Stocky_DB_2.Store_price()
 SUI = Stocky_DB_2.Ticker_UI()
 loader=SUI.load_lottiurl('https://assets7.lottiefiles.com/packages/lf20_gbfwtkzw.json')
 
@@ -123,6 +123,7 @@ class StockyAiTrain:
         st.subheader('Training Completed...')
         comp=SUI.load_lottiurl('https://assets5.lottiefiles.com/packages/lf20_uk52xbuq.json')
         st_lottie(comp,height=100,width=100, key='comp')
+        SPP.trained_tickers(self.ticker)
 
 
         

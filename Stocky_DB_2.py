@@ -367,6 +367,19 @@ class credintials():
         date = self.now.strftime("%d-%m-%Y")
         self.dbf.put({'key':name,'Date':date,'Feedback':feedback})
 
+    def get_feedback_data(self):
+        data=self.dbf.fetch().items
+        df = pd.DataFrame(data)
+        df=df[['Date','key','Feedback']]
+        return df
+
+    def get_users_data(self):
+        data=self.dbc.get(key='credintials')
+        data=data['user']['usernames']
+        df = pd.DataFrame(data)
+        df=df.transpose()
+        return df
+
 
         
 
