@@ -137,7 +137,7 @@ class Portfolio():
                 self.stocks[tik]=S_detail
                 #return self.stocks
                 self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
-                self.Transactions(self.user_name,ticker,price,quant,'Buy')
+                self.Transactions(self.user_name,tik,price,quant,"Buy")
                 st.success('Stocks Brought')
                 
             else:
@@ -157,7 +157,7 @@ class Portfolio():
             #print(self.stocks[tik])
             #return self.stocks
             self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
-            self.Transactions(self.user_name,ticker,price,quant,'Sell')
+            self.Transactions(self.user_name,tik,price,quant,"Sell")
             st.success('Stocks Sold') 
 
         elif tik not in self.stocks.keys():
