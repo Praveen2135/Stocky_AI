@@ -12,19 +12,23 @@ if submit:
     st.success('Thank you for your valuable feedback')
 
 
+if st.session_state == {}:
+    st.session_state['authentication_status'] = ""
 
 # Admin Panil
-selected = option_menu(
-    menu_title=None,
-    options=['Users','Feedback'],
-    icons=["projector-fill","terminal"],
-    orientation='horizontal',
-    styles={'nav-link':{'font-size':'15px'}})
+if st.session_state['username']=='praveen':
 
-if selected=="Users":
-    df = SSF.get_users_data()
-    st.table(df)
+    selected = option_menu(
+        menu_title=None,
+        options=['Users','Feedback'],
+        icons=["projector-fill","terminal"],
+        orientation='horizontal',
+        styles={'nav-link':{'font-size':'15px'}})
 
-elif selected=="Feedback":
-    df=SSF.get_feedback_data()
-    st.table(df)
+    if selected=="Users":
+        df = SSF.get_users_data()
+        st.table(df)
+
+    elif selected=="Feedback":
+        df=SSF.get_feedback_data()
+        st.table(df)
