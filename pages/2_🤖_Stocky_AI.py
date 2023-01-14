@@ -50,10 +50,11 @@ elif selected == 'Train':
                         If you want you can Quit it can train it self.
                         You will get your ticker in Pridect Drop-down if its Trained''')
     if trainB:
+        SPP.trained_tickers(ticker)
         st_l.st_lottie(coder,height=250,width=250, key='coder')
         Stocky_AI.StockyAiTrain(ticker)
         st.success('Stocky AI started Learning abount ticker')
-        SPP.trained_tickers(ticker)
+        
 
 elif selected == 'Predictions':
     tick_list = SD.get_all_ticker()
