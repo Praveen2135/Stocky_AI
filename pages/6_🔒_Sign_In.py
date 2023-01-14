@@ -3,6 +3,9 @@ import streamlit as st
 import Stocky_DB_2
 import bcrypt
 
+if st.session_state == {}:
+    st.session_state['authentication_status'] = ""
+
 cred = Stocky_DB_2.credintials()
 trans = Stocky_DB_2.Portfolio()
 
