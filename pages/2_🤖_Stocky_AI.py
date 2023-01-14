@@ -9,6 +9,9 @@ import streamlit as st
 from streamlit_option_menu import option_menu
 import streamlit_lottie as st_l
 
+if st.session_state == {}:
+    st.session_state['authentication_status'] = ""
+
 SD = Stocky_DB_2.StockyDb()
 SP = Stocky_DB_2.Portfolio()
 SPP = Stocky_DB_2.Store_price()
