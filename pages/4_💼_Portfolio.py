@@ -40,7 +40,6 @@ if st.session_state['authentication_status']:
             S_but=st.button('Proced')
             if S_but :
                 SP.Buy(B_ticker,quant)
-                SP.Transactions(user,B_ticker,C_price,quant,'Buy')
                 st.experimental_rerun()
                 
 
@@ -56,7 +55,6 @@ if st.session_state['authentication_status']:
             S_but=st.button('Proced')
             if S_but :
                 SP.Sell(S_ticker,quant)
-                SP.Transactions(user,S_ticker,C_price,quant,'Sell')
                 st.experimental_rerun()
 
 else:
