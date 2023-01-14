@@ -8,7 +8,7 @@ import datetime as dt
 import streamlit as st
 #from tensorflow.keras.utils import HDF5Matrix
 
-if st.session_state == None:
+if st.session_state == {}:
     st.session_state['authentication_status'] = ""
 
 SD = Stocky_DB_2.StockyDb()
