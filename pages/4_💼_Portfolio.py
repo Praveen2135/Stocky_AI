@@ -6,6 +6,9 @@ from yahoo_fin.stock_info import *
 import datetime as dt
 import streamlit as st
 
+if st.session_state == {}:
+    st.session_state['authentication_status'] = ""
+    
 SP = Stocky_DB_2.Portfolio()
 SUI = Stocky_DB_2.Ticker_UI()
 
