@@ -122,17 +122,15 @@ class StockyAiTrain:
         history_close = model_close.fit(self.trainX, self.trainY_close, epochs=24, batch_size= 12, validation_split= 0.1, verbose =1 )
         c1.write('''Closeing sctock price training Ended....''')
         st.subheader('Training Completed...')
-        comp=SUI.load_lottiurl('https://assets5.lottiefiles.com/packages/lf20_uk52xbuq.json')
-        st_lottie(comp,height=100,width=100, key='comp')
-        SPP.trained_tickers(self.ticker)
-
-
         
+
         #Exporting PKL
         model_open.save('Models/{}_open.h5'.format(self.ticker))
         model_high.save('Models/{}_high.h5'.format(self.ticker))
         model_low.save('Models/{}_low.h5'.format(self.ticker))
         model_close.save('Models/{}_close.h5'.format(self.ticker))
+        comp=SUI.load_lottiurl('https://assets5.lottiefiles.com/packages/lf20_uk52xbuq.json')
+        st_lottie(comp,height=100,width=100, key='comp')
 
 class StockyAIForcast:
     
