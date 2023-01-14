@@ -46,9 +46,9 @@ elif selected == 'Train':
     coder=SUI.load_lottiurl('https://assets7.lottiefiles.com/packages/lf20_ne6kcqfz.json')
     ticker=st.text_input('Ticker')
     trainB=st.button('Train')
-    st.write('''Note:- Please enter the Ticker as per Yahoo Finance and click on Train,
-                        If you want you can Quit it can train it self.
-                        You will get your ticker in Pridect Drop-down if its Trained''')
+    #st.write('''Note:- Please enter the Ticker as per Yahoo Finance and click on Train,
+                        #If you want you can Quit it can train it self.
+                        #You will get your ticker in Pridect Drop-down if its Trained''')
     if trainB:
         SPP.trained_tickers(ticker)
         st_l.st_lottie(coder,height=250,width=250, key='coder')
