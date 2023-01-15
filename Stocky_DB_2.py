@@ -1,3 +1,4 @@
+#Importing all modules
 from deta import Deta
 import numpy as np
 import pandas as pd
@@ -9,6 +10,7 @@ import datetime as dt
 import json
 import requests
 
+# this will be used to conect and do all functions related to DataBase
 class StockyDb:
     def __init__(self):
         self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
