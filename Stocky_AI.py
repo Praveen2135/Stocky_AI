@@ -1,3 +1,4 @@
+# importing all required modules
 import yfinance as yf
 import seaborn as sns
 from keras.models import Sequential
@@ -15,12 +16,16 @@ import Stocky_DB_2
 import streamlit as st
 from streamlit_lottie import st_lottie
 
+# makeing objects of own functions
 SPP = Stocky_DB_2.Store_price()
 SUI = Stocky_DB_2.Ticker_UI()
 loader=SUI.load_lottiurl('https://assets7.lottiefiles.com/packages/lf20_gbfwtkzw.json')
 
+
+# Creating class it will be self train the time series
 class StockyAiTrain:
     
+    # initiating required variables
     def __init__(self,ticker):
         self.ticker=ticker
         self.Train_data=""
@@ -38,9 +43,12 @@ class StockyAiTrain:
         self.holidays = ['2023-01-26','2023-03-07','2023-03-30','2023-04-04','2023-04-07','2023-04-14','2023-05-01','2023-06-28','2023-08-15','2023-09-19','2023-10-02','2023-10-24','2023-11-14','2023-11-27','2023-12-25']
         self.Training()
         
+    # Function to pull the data prepare it for ML 
     def pre_pro_data(self):
+        #creating object
         ticker_obj = yf.Ticker(self.ticker)
-        T_DF=ticker_obj.history(period='1y')
+        T_DF=ticker_obj.history(period='1y'
+        #handeling the data
         T_DF.drop(['Dividends','Stock Splits','Volume'],axis=1,inplace=True)
         T_DF=T_DF.reset_index()
         T_DF=T_DF[T_DF['Date']>'2000-01-01']
@@ -50,13 +58,17 @@ class StockyAiTrain:
         self.scaler = self.scaler.fit(Train_data)
         Train_data_scaled = self.scaler.transform(Train_data)
         self.Train_data=Train_data
+        # empty list created to save the data
         trainX=[]
         trainY_open=[]
         trainY_high=[]
         trainY_low=[]
         trainY_close=[]
+        #it will take 14days data and learn for 1day data
         n_future=1
         n_past=14
+        
+        #for loop to crea data to train ML
         for i in range(n_past, len(Train_data_scaled) - n_future +1):
             trainX.append(Train_data_scaled[i - n_past:i, 0:Train_data.shape[1]])
             trainY_open.append(Train_data_scaled[i + n_future - 1:i + n_future, 0])
@@ -132,6 +144,7 @@ class StockyAiTrain:
         comp=SUI.load_lottiurl('https://assets5.lottiefiles.com/packages/lf20_uk52xbuq.json')
         st_lottie(comp,height=100,width=100, key='comp')
 
+#Class for Forcasting it
 class StockyAIForcast:
     
     def __init__(self,ticker):
@@ -185,6 +198,8 @@ class StockyAIForcast:
         df_forcast['Date']=pd.to_datetime(df_forcast['Date'])
         print("dONE")
         df_forcast['Date'] = df_forcast['Date'].astype('str')
+        
+        #Saving the data to database for fast fetching and elemnating multiple genrating
         SD = Stocky_DB_2.StockyDb()
         SD.save_to_DB(ticker,df_forcast)
       
