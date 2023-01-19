@@ -60,6 +60,7 @@ class StockyDb:
                 price['H_buy_price']=L_min+(L_min*0.01)
                 price['H_sell_price']=H_max
                 price['L_sell_price']=H_max-(H_max*0.01)
+                price['Current price']= int(get_live_price(i))
                 price['profit% ']=((price['L_sell_price']-price['H_buy_price'])/price['H_buy_price'])*100
                 buy.append(price)
             elif H_date<L_date:
@@ -69,6 +70,7 @@ class StockyDb:
                 price['L_sell_price']=H_max-(H_max*0.01)
                 price['L_buy_price']=L_min
                 price['H_buy_price']=L_min+(L_min*0.01)
+                price['Current price']= int(get_live_price(i))
                 price['profit%']=((price['L_sell_price']-price['H_buy_price'])/price['H_buy_price'])*100
                 sell.append(price)
         
@@ -188,10 +190,14 @@ class Portfolio():
             prices.append(pr)
             
         #hold_df['current price']=hold_df['index'].apply(self.get_current_price)
+        hold_df['Invested Value']=(hold_df['buy_price'])*(hold_df['quantity'])
+        #hold_df['Value']=hold_df['Value'].apply(lambda x: round(x,2))
         hold_df['current price']=prices
+        hold_df['Current Value']=(hold_df['current price'])*(hold_df['quantity'])
         hold_df['P&L']= (hold_df['current price']-hold_df['buy_price'])*hold_df['quantity']
         hold_df['P&L in %']= (hold_df['P&L']/(hold_df['buy_price']*hold_df['quantity']))*100
         hold_df=hold_df[hold_df['quantity']>0]
+        
         hold_df['quantity']=hold_df['quantity'].astype('int')
         return hold_df, self.cash
 
