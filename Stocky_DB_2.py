@@ -192,16 +192,18 @@ class Portfolio():
             prices.append(pr)
             
         #hold_df['current price']=hold_df['index'].apply(self.get_current_price)
-        hold_df['Invested Value']=(hold_df['buy_price'])*(hold_df['quantity'])
+        hold_df['Invested Value']=hold_df['buy_price']*hold_df['quantity']
         #hold_df['Value']=hold_df['Value'].apply(lambda x: round(x,2))
         hold_df['current price']=prices
         hold_df['Current Value']=(hold_df['current price'])*(hold_df['quantity'])
         hold_df['P&L']= (hold_df['current price']-hold_df['buy_price'])*hold_df['quantity']
         hold_df['P&L in %']= (hold_df['P&L']/(hold_df['buy_price']*hold_df['quantity']))*100
         hold_df=hold_df[hold_df['quantity']>0]
+        amount_in= hold_df['Invested Value'].sum()
+        current_amt = hold_df['Current Value'].sum()
         
         hold_df['quantity']=hold_df['quantity'].astype('int')
-        return hold_df, self.cash
+        return hold_df, self.cash,amount_in,current_amt
 
     def get_user_name(self):
         User_N=""

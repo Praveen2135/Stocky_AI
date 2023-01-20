@@ -14,16 +14,14 @@ SUI = Stocky_DB_2.Ticker_UI()
 
 
 if st.session_state['authentication_status']:
-    holdings, cash=SP.get_holdings()
+    holdings, cash,amount_in,current_amt=SP.get_holdings()
     st.header(st.session_state['name'])
     user=st.session_state['username']
     st.subheader('Availabel cash ')
     st.subheader(int(cash))
     t1,t2,t3,t4 = st.columns(4)
     v1,v2,v3,v4 = st.columns(4)
-    amount_in= holdings['Invested Value'].sum()
-    current_amt = holdings['Current Value'].sum()
-    net_PL =amount_in-current_amt
+    net_PL =current_amt-amount_in
     t1.subheader('Invested')
     t2.subheader('Current Value')
     t3.subheader('Net P&L')
