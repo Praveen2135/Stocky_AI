@@ -11,6 +11,10 @@ import streamlit as st
 if st.session_state == {}:
     st.session_state['authentication_status'] = ""
 
+
+if st.session_state['authentication_status']:
+    st.sidebar.header(st.session_state['name'])
+
 SD = Stocky_DB_2.StockyDb()
 SP = Stocky_DB_2.Portfolio()
 SPP = Stocky_DB_2.Store_price()

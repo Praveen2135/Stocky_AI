@@ -26,11 +26,26 @@ for i in tik:
   df=i_tic.history(period='7d')
   data['{}'.format(i)]=df
 
-st.header('WIP')
 
-select = st.selectbox('Chart Patterns',options=['Hammer pattern'])
+st.subheader('Selected Patter search for last 7days in Nifty50 Stocks')
+select = st.selectbox('Chart Patterns',options=['Hammer pattern','Bullish Engulfing','Bearish Engulfing','Shooting Star','Bullish Harami','Bearish Harami'])
 
 if select == 'Hammer pattern':
-    df=CP.Hammer_pattern(data,tik)
+  df=CP.Hammer_pattern(data,tik)
+
+elif select == 'Bullish Engulfing':
+  df=CP.bullish_engulfing(data,tik)
+
+elif select == 'Bearish Engulfing':
+  df=CP.bearish_engulfing(data,tik)
+
+elif select == 'Shooting Star':
+  df = CP.Shooting_star(data,tik)
+
+elif select == 'Bullish Harami':
+  df= CP.Bullish_Harami(data,tik)
+
+elif select == 'Bearish Harami':
+  df= CP.Bearish_Harami(data,tik)
 
 st.table(df)

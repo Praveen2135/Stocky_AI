@@ -28,7 +28,7 @@ if select =='Sing In':
     if authentication_status:
         authenticator.logout('Logout', 'sidebar')
         st.write(f'Welcome *{name}*')
-        #st.title('Some content')
+        st.write('For Log Out Please come back here')
     elif authentication_status == False:
         st.error('Username/password is incorrect')
     elif authentication_status == None:
@@ -42,7 +42,6 @@ elif select=='Sing Up':
             cred.creat_portfolio(user_name)
             trans.Demo_Trans(user_name)
             st.success('User registered successfully')
-            st.experimental_rerun()
     except Exception as e:
         st.error(e)
         
