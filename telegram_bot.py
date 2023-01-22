@@ -28,5 +28,6 @@ class Telegram_bot():
         disp = updater.dispatcher
         disp.add_handler(telegram.ext.CommandHandler("start",self.start))
         disp.add_handler(telegram.ext.CommandHandler("help",self.help))
+        disp.add_handler(telegram.ext.CommandHandler("login",self.login))
         updater.start_polling()
         updater.idle()
