@@ -12,6 +12,10 @@ import streamlit_lottie as st_l
 if st.session_state == {}:
     st.session_state['authentication_status'] = ""
 
+# To show name on side bar
+if st.session_state['authentication_status']:
+    st.sidebar.header(st.session_state['name'])
+
 SD = Stocky_DB_2.StockyDb()
 SP = Stocky_DB_2.Portfolio()
 SPP = Stocky_DB_2.Store_price()

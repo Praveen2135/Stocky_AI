@@ -11,7 +11,7 @@ import streamlit as st
 if st.session_state == {}:
     st.session_state['authentication_status'] = ""
 
-
+# To show name on side bar
 if st.session_state['authentication_status']:
     st.sidebar.header(st.session_state['name'])
 

@@ -1,6 +1,7 @@
 import streamlit as st
 import Stocky_DB_2
 
+
 SUI = Stocky_DB_2.Ticker_UI()
 
 ticker=st.sidebar.text_input("Search Ticker")
