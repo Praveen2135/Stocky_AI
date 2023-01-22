@@ -15,8 +15,13 @@ class Telegram_bot():
         The following commands are available:
         /start
         /get_stock_price
-        /get_portfolio""")
+        /get_portfolio
+        /login""")
 
+    def login(self,update,context):
+        update.message.reply_text("Please give user name")
+        user=(update.message)
+        update.message.reply_text(user)
 
     def main(self):
         updater = telegram.ext.Updater(self.Token,use_context=True)
