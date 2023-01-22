@@ -101,9 +101,7 @@ def help():
     /get_stock_price
     /get_portfolio""")
 
-def get_stock_price():
     
-
 updater = telegram.ext.Updater(Token,use_context=True)
 
 disp = updater.dispatcher
