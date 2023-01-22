@@ -85,3 +85,31 @@ if ref_b:
 
 
 #print(st.session_state['authentication_status'])
+
+import telegram
+from telegram.ext import *
+
+Token='5900892098:AAEHsv03l9Ow7LOc80re1ESq-sMu6VOvCXs'
+
+def start(update,context):
+  update.message.reply_text("hello praveen")
+
+def help():
+    update.message.reply_text("""
+    The following commands are available:
+    /start
+    /get_stock_price
+    /get_portfolio""")
+
+def get_stock_price():
+    
+
+updater = telegram.ext.Updater(Token,use_context=True)
+
+disp = updater.dispatcher
+
+disp.add_handler(telegram.ext.CommandHandler("start",start))
+disp.add_handler(telegram.ext.CommandHandler("help",help))
+
+updater.start_polling()
+updater.idle()
