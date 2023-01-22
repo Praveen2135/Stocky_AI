@@ -87,4 +87,4 @@ if ref_b:
 
 #print(st.session_state['authentication_status'])
 
-TB = telegram_bot()
+TB = telegram_bot.Telegram_bot()
