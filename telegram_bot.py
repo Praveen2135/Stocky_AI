@@ -31,11 +31,11 @@ class Telegram_bot():
         update.message.reply_text(user)
 
     def get_portfolio(self,update,context):
-        st.session_state['authentication_status'] = True
-        st.session_state['username'] = "praveen"
-        holdings, cash,amount_in,current_amt=SP.get_holdings()
-        holdings = holdings.drop(['Invested Value','Current Value'],axis=1)
-        update.message.reply_text(holdings)
+        #st.session_state['authentication_status'] = True
+        #st.session_state['username'] = "praveen"
+        #holdings, cash,amount_in,current_amt=SP.get_holdings()
+        #holdings = holdings.drop(['Invested Value','Current Value'],axis=1)
+        update.message.reply_text("holdings")
         
 
     def main(self):
