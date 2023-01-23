@@ -3,10 +3,10 @@ from telegram.ext import *
 import Stocky_DB_2
 
 # creating obj for portfolio
-SP = Stocky_DB_2.Portfolio()
+#SP = Stocky_DB_2.Portfolio()
 
-if st.session_state == {}:
-    st.session_state['authentication_status'] = ""
+#if st.session_state == {}:
+    #st.session_state['authentication_status'] = ""
 
 class Telegram_bot():
     def __init__(self):
@@ -31,11 +31,11 @@ class Telegram_bot():
         update.message.reply_text(user)
 
     def get_portfolio(self,update,context):
-        st.session_state['authentication_status'] = True
-        st.session_state['username'] = "praveen"
-        holdings, cash,amount_in,current_amt=SP.get_holdings()
-        holdings = holdings.drop(['Invested Value','Current Value'],axis=1)
-        update.message.reply_text(holdings)
+        #st.session_state['authentication_status'] = True
+        #st.session_state['username'] = "praveen"
+        #holdings, cash,amount_in,current_amt=SP.get_holdings()
+        #holdings = holdings.drop(['Invested Value','Current Value'],axis=1)
+        update.message.reply_text("WIP")
         
 
     def main(self):
