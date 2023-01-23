@@ -44,5 +44,6 @@ class Telegram_bot():
         disp.add_handler(telegram.ext.CommandHandler("start",self.start))
         disp.add_handler(telegram.ext.CommandHandler("help",self.help))
         disp.add_handler(telegram.ext.CommandHandler("login",self.login))
+        disp.add_handler(telegram.ext.CommandHandler("get_portfolio",self.get_portfolio))
         updater.start_polling()
         updater.idle()
