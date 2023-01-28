@@ -29,7 +29,7 @@ class Telegram_bot():
         /stock ticker
         /login""")
 
-    def stock(update, context):
+    def stock(self,update, context):
         price = get_live_price(context.args[0])
         price= round(price,2)
         update.message.reply_text(f"Stock price: {price}")
@@ -39,7 +39,7 @@ class Telegram_bot():
         user=(update.message)
         update.message.reply_text(user)
 
-    def get_holdings(update, context):
+    def get_holdings(self,update, context):
         user = update.message.from_user
         username = user.username
         print(username)
