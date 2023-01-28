@@ -1,6 +1,7 @@
 import telegram
 from telegram.ext import *
 import Stocky_DB_2
+from yahoo_fin.stock_info import *
 
 # creating obj for portfolio
 #SP = Stocky_DB_2.Portfolio()
@@ -28,6 +29,11 @@ class Telegram_bot():
         /get_portfolio
         /login""")
 
+    def stock_price(update, context):
+        price = get_live_price(context.args[0])
+        price= round(price,2)
+        update.message.reply_text(f"Stock price: {price}")
+
     def login(self,update,context):
         update.message.reply_text("Please give user name")
         user=(update.message)
@@ -36,6 +42,7 @@ class Telegram_bot():
     def get_holdings(update, context):
         user = update.message.from_user
         username = user.username
+        print(username)
         if username in data.keys():
             update.message.reply_text(f"we got you {data[username]}")
         else:
