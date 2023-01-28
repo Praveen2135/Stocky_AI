@@ -25,7 +25,6 @@ class Telegram_bot():
         update.message.reply_text("""
         The following commands are available:
         /start
-        /get_stock_price
         /get_portfolio
         /stock_price ticker
         /login""")
