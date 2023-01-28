@@ -4,6 +4,9 @@ import Stocky_DB_2
 
 # creating obj for portfolio
 #SP = Stocky_DB_2.Portfolio()
+STU = Stocky_DB_2.Store_price()
+
+data = STU.get_tele_user()
 
 #if st.session_state == {}:
     #st.session_state['authentication_status'] = ""
@@ -30,12 +33,14 @@ class Telegram_bot():
         user=(update.message)
         update.message.reply_text(user)
 
-    def get_portfolio(self,update,context):
-        #st.session_state['authentication_status'] = True
-        #st.session_state['username'] = "praveen"
-        #holdings, cash,amount_in,current_amt=SP.get_holdings()
-        #holdings = holdings.drop(['Invested Value','Current Value'],axis=1)
-        update.message.reply_text("WIP")
+    def get_holdings(update, context):
+        user = update.message.from_user
+        username = user.username
+        if username in data.keys():
+            update.message.reply_text(f"we got you {data[username]}")
+        else:
+            update.message.reply_text("Currently you dont have accses")
+
         
 
     def main(self):

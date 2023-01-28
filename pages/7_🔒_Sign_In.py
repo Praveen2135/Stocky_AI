@@ -8,6 +8,7 @@ if st.session_state == {}:
 
 cred = Stocky_DB_2.credintials()
 trans = Stocky_DB_2.Portfolio()
+STU = Stocky_DB_2.Store_price()
 
 #u_names,u_details = credintials.credintials_get()
 
@@ -34,6 +35,14 @@ if select =='Sing In':
     elif authentication_status == None:
         st.warning('Please enter your username and password')
 
+    if st.session_state['authentication_status'] == True:
+        T_user=st.text_input("Please enter the UserName as per Telegram , To have accsse Stocky AI throught Telegram")
+        T_S=st.button('Submit')
+        if T_S:
+            STU.put_tele_user(T_user,st.session_state['username'])
+            #st.success("Its Done")
+
+
 elif select=='Sing Up':
     try:
         if authenticator.register_user('Register user', preauthorization=False):
@@ -45,3 +54,4 @@ elif select=='Sing Up':
     except Exception as e:
         st.error(e)
         
+

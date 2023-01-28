@@ -300,6 +300,19 @@ class Store_price():
         #T_T = set(T_T)
         return T_T
 
+    def put_tele_user(self,T_user,S_user):
+        # T_user telegram user id and S_user is Stocky AI user id
+        user_d = self.dbh.get(key='telegram_users')['data']
+        user_d[T_user]=S_user
+        self.dbh.put({'key':'telegram_users','data':user_d})
+        st.success("Its Done")
+
+    def get_tele_user(self):
+        data=dbh.get(key='telegram_users')['data']
+        return data
+
+
+
 
 class Ticker_UI():
     def __init__(self):
