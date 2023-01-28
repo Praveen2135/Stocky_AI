@@ -25,8 +25,8 @@ class Telegram_bot():
         update.message.reply_text("""
         The following commands are available:
         /start
-        /get_portfolio
-        /stock_price ticker
+        /get_holdings
+        /stock ticker
         /login""")
 
     def stock(update, context):
