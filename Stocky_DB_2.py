@@ -305,10 +305,10 @@ class Store_price():
         user_d = self.dbh.get(key='telegram_users')['data']
         user_d[T_user]=S_user
         self.dbh.put({'key':'telegram_users','data':user_d})
-        st.success("Its Done")
+        
 
     def get_tele_user(self):
-        data=dbh.get(key='telegram_users')['data']
+        data=self.dbh.get(key='telegram_users')['data']
         return data
 
 
