@@ -27,6 +27,7 @@ class Telegram_bot():
         /start
         /get_stock_price
         /get_portfolio
+        /stock_price ticker
         /login""")
 
     def stock_price(update, context):
@@ -56,6 +57,7 @@ class Telegram_bot():
         disp.add_handler(telegram.ext.CommandHandler("start",self.start))
         disp.add_handler(telegram.ext.CommandHandler("help",self.help))
         disp.add_handler(telegram.ext.CommandHandler("login",self.login))
+        disp.add_handler(telegram.ext.CommandHandler("stock_price",self.stock_price))
         disp.add_handler(telegram.ext.CommandHandler("get_portfolio",self.get_holdings))
         updater.start_polling()
         updater.idle()
