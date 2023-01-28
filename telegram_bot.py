@@ -43,6 +43,7 @@ class Telegram_bot():
         user = update.message.from_user
         username = user.username
         print(username)
+        #Get the user data
         if username in data.keys():
             update.message.reply_text(f"we got you {data[username]}")
         else:
