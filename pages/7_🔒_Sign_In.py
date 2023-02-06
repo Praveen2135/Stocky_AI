@@ -40,7 +40,7 @@ if select =='Sing In':
         T_S=st.button('Submit')
         if T_S:
             STU.put_tele_user(T_user,st.session_state['username'])
-            #st.success("Its Done")
+            st.success("Its Done")
 
 
 elif select=='Sing Up':

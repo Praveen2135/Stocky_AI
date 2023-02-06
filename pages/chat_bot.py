@@ -1,6 +1,6 @@
-import chat_bot
+##import chat_bot
 
-bot = chat_bot
+#bot = chat_bot
 
-bot.chat_bot()
+#bot.chat_bot()
 

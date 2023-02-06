@@ -7,6 +7,7 @@ from deta import Deta
 # creating obj for portfolio
 #SP = Stocky_DB_2.Portfolio()
 STU = Stocky_DB_2.Store_price()
+STR= Stocky_DB_2.StockyDb()
 
 data = STU.get_tele_user()
 
@@ -59,12 +60,14 @@ class Telegram_bot():
         The following commands are available:
         /start
         /get_holdings
+        /Recomndation
         /stock ticker
         /login""")
 
     def reco(self,update, context):
+        buy, sell = STR.Recomodation()
+        update.message.reply_text(f"Buy side: {buy.to_string},---------- Sell side: {sell.to_string}")
 
-        pass
 
     def stock(self,update, context):
         price = get_live_price(context.args[0])
@@ -98,5 +101,6 @@ class Telegram_bot():
         disp.add_handler(telegram.ext.CommandHandler("login",self.login))
         disp.add_handler(telegram.ext.CommandHandler("stock",self.stock))
         disp.add_handler(telegram.ext.CommandHandler("get_holdings",self.get_holdings))
+        disp.add_handler(telegram.ext.CommandHandler("Recomndation",self.reco))
         updater.start_polling()
         updater.idle()
