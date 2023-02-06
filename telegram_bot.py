@@ -50,7 +50,9 @@ class Telegram_bot():
         
 
     def start(self,update,context):
-        update.message.reply_text("hello praveen")
+        user = update.message.from_user
+        username = user.username
+        update.message.reply_text(f"hello {username}")
 
     def help(self,update,context):
         update.message.reply_text("""
@@ -59,6 +61,10 @@ class Telegram_bot():
         /get_holdings
         /stock ticker
         /login""")
+
+    def reco(self,update, context):
+
+        pass
 
     def stock(self,update, context):
         price = get_live_price(context.args[0])
@@ -78,8 +84,7 @@ class Telegram_bot():
         if username in data.keys():
             hold_df,amount_in,current_amt = T_get_holdings(data[username])
             hold_df=hold_df[['index','quantity','P&L in %']]
-            S_DF = hold_df.to_string
-            update.message.reply_text(f"we got you {data[username]},your holdings {S_DF} ")
+            update.message.reply_text(f"we got you {data[username]},your holdings {hold_df.to_string} ")
         else:
             update.message.reply_text("Currently you dont have accses")
 
