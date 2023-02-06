@@ -38,11 +38,20 @@ if selected == "Predict":
     T_T=SPP.get_T_tickers()
     ticker = st.selectbox('Select from trained Tickers',options=(T_T))
     predictB = st.button('Predict')
+    prd_all = st.button('Pridect ALL')
     st.write("Note:- If Ticker is not availabile in Drop-down, Please Go-to Train and Train the Stocky AI.")
     #st_lottie(robot,height=250,width=250, key='hello')
     if predictB:
         st_l.st_lottie(AI,height=250,width=250, key='AI')
         Stocky_AI.StockyAIForcast(ticker)
+        st.success('Ticker Prediction Done...!')
+
+    if prd_all:
+        st_l.st_lottie(AI,height=250,width=250, key='AI')
+        for i in T_T:
+            print(i,'WIP')
+            Stocky_AI.StockyAIForcast(i)
+            print(i,'Done')
         st.success('Ticker Prediction Done...!')
         
 
