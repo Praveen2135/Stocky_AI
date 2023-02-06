@@ -2,6 +2,7 @@ import telegram
 from telegram.ext import *
 import Stocky_DB_2
 from yahoo_fin.stock_info import *
+from deta import Deta
 
 # creating obj for portfolio
 #SP = Stocky_DB_2.Portfolio()
