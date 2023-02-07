@@ -47,6 +47,7 @@ def T_get_holdings(user_name):
 class Telegram_bot():
     def __init__(self):
         self.Token='5900892098:AAEHsv03l9Ow7LOc80re1ESq-sMu6VOvCXs'
+        self.bot = telegram.Bot(token=self.Token)
         self.main()
         
 
@@ -87,7 +88,9 @@ class Telegram_bot():
         if username in data.keys():
             hold_df,amount_in,current_amt = T_get_holdings(data[username])
             hold_df=hold_df[['index','quantity','P&L in %']]
-            update.message.reply_text(f"we got you {data[username]},your holdings {hold_df.to_string} ")
+            update.message.reply_text(f"we got you {data[username]},your holdings :-")
+            for index, row in hold_df.iterrows():
+                update.message.reply_text({row})
         else:
             update.message.reply_text("Currently you dont have accses")
 
