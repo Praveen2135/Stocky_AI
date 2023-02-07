@@ -54,7 +54,7 @@ class Telegram_bot():
     def start(self,update,context):
         user = update.message.from_user
         username = user.username
-        update.message.reply_text(f"hello {username}")
+        update.message.reply_text(f"hello {data[username]}")
 
     def help(self,update,context):
         update.message.reply_text("""
@@ -93,8 +93,6 @@ class Telegram_bot():
                 update.message.reply_text({row})
         else:
             update.message.reply_text("Currently you dont have accses")
-
-        
 
     def main(self):
         updater = telegram.ext.Updater(self.Token,use_context=True)
