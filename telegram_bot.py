@@ -90,14 +90,13 @@ Please click here to explor
         buy=buy[['Ticker','Current price','profit% ','L_sell_price','H_sell_price']]
         sell= sell[sell['L_buy_price'] < sell['Current price']]
         sell=sell[['Ticker','Current price','profit%','L_sell_price','H_sell_price']]
+        update.message.reply_text('Buy Side')
         for index, row in buy.iterrows():
-            #update.message.reply_text('Buy Side')
-                update.message.reply_text(f"""Buy 
-                                            {row}""")
+            
+                update.message.reply_text(f"{row}")
+        update.message.reply_text('Sell Side')
         for index, row in sell.iterrows():
-            #update.message.reply_text('Sell Side')
-            update.message.reply_text(f"""Sell 
-                                        {row}""")
+            update.message.reply_text(f"{row}")
 
 
 
