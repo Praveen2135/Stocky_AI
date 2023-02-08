@@ -13,6 +13,10 @@ SD = Stocky_DB_2.StockyDb()
 if st.session_state['authentication_status']:
 
     buy_df,sell_df=SD.Recomodation()
+
+    buy_df= buy_df[buy_df['L_buy_price'] < buy_df['Current price']]
+    sell_df= sell_df[sell_df['L_buy_price'] < sell_df['Current price']]
+
     st.header('For Buy')
     st.table(buy_df)
     st.header('For Sell')

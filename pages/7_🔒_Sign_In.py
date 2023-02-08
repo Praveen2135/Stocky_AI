@@ -2,6 +2,7 @@ import streamlit_authenticator as stauth
 import streamlit as st
 import Stocky_DB_2
 import bcrypt
+import streamlit.components.v1 as com
 
 if st.session_state == {}:
     st.session_state['authentication_status'] = ""
@@ -36,7 +37,11 @@ if select =='Sing In':
         st.warning('Please enter your username and password')
 
     if st.session_state['authentication_status'] == True:
-        T_user=st.text_input("Please enter the UserName as per Telegram , To have accsse Stocky AI throught Telegram")
+        com.html(f"""<button>
+  <a href="https://t.me/StockyAIbot" target="_blank">Telegram Bot</a>
+</button>
+""",height=30)
+        T_user=st.text_input("Please enter the UserName as per Telegram( note:- with out @ symbol) , To have accsse Stocky AI throught Telegram")
         T_S=st.button('Submit')
         if T_S:
             STU.put_tele_user(T_user,st.session_state['username'])

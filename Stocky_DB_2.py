@@ -79,12 +79,12 @@ class StockyDb:
         buy_df=pd.DataFrame()
         for i in range (0,len(buy)):
             buy_df=buy_df.append([buy[i]],ignore_index=True)
-        #buy_df[buy_df['profit']>3]
+        buy_df = buy_df[buy_df['profit% '] > 3]
         sell_df=pd.DataFrame()
         for j in range (0,len(sell)):
             sell_df=sell_df.append([sell[j]],ignore_index=True)
+        sell_df = sell_df[sell_df['profit%'] > 3]
 
-        #sell_df=sell_df[sell_df['profit%']>=3]
         return buy_df,sell_df
         
 
