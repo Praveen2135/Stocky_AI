@@ -92,12 +92,11 @@ Please click here to explor
         sell=sell[['Ticker','Current price','profit%','L_sell_price','H_sell_price']]
         for index, row in buy.iterrows():
             #update.message.reply_text('Buy Side')
-            update.message.reply_text(f”””Buy 
-            {row}"””)
+            update.message.reply_text(f’Buy {row}’)
         for index, row in sell.iterrows():
             #update.message.reply_text('Sell Side')
-            update.message.reply_text(f"””Sell 
-            {row}"””)
+            update.message.reply_text(f"Sell 
+            {row}")
 
 
 
