@@ -82,7 +82,7 @@ Please click here to explor
         /get_holdings
         /Recomndation
         /stock ticker
-        /Feedback""")
+        /Feedback your feedback""")
 
     def reco(self,update, context):
         buy, sell = STR.Recomodation()
@@ -91,11 +91,13 @@ Please click here to explor
         sell= sell[sell['L_buy_price'] < sell['Current price']]
         sell=sell[['Ticker','Current price','profit%','L_sell_price','H_sell_price']]
         for index, row in buy.iterrows():
-            update.message.reply_text('Buy Side')
-            update.message.reply_text(f"{row}")
+            #update.message.reply_text('Buy Side')
+            update.message.reply_text(f”””Buy 
+            {row}"””)
         for index, row in sell.iterrows():
-            update.message.reply_text('Sell Side')
-            update.message.reply_text(f"{row}")
+            #update.message.reply_text('Sell Side')
+            update.message.reply_text(f"””Sell 
+            {row}"””)
 
 
 
