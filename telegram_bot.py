@@ -117,6 +117,7 @@ Please click here to explor
         username = user.username
         name = data[username]
         feedback =context.args
+        feedback = ' '.join(feedback)
         STF.get_feedback(name,feedback)
         update.message.reply_text(f"Thanks for the valuable feedback  {name} .")
 
