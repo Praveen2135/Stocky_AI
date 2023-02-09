@@ -3,6 +3,7 @@ from telegram.ext import *
 import Stocky_DB_2
 from yahoo_fin.stock_info import *
 from deta import Deta
+import Stocky_AI
 
 # creating obj for portfolio
 #SP = Stocky_DB_2.Portfolio()
@@ -114,8 +115,16 @@ Please click here to explor
         user = update.message.from_user
         username = user.username
         name = data[username]
-        feedback =context.args[0]
+        feedback =context.args
         STF.get_feedback(name,feedback)
+        update.message.reply_text("Thanks for the valuable feedback  {name} .")
+
+    def Train(self,update,context):
+        ticker=context.args[0]
+        update.message.reply_text(f"Traing is started for {ticker}")
+        Stocky_AI.StockyAiTrain(ticker)
+        update.message.reply_text("Traing for {ticker} is completed")
+    
 
     def get_holdings(self,update, context):
         user = update.message.from_user
@@ -143,5 +152,6 @@ Please click here to explor
         disp.add_handler(telegram.ext.CommandHandler("get_holdings",self.get_holdings))
         disp.add_handler(telegram.ext.CommandHandler("Recomndation",self.reco))
         disp.add_handler(telegram.ext.CommandHandler("Feedback",self.feedback))
+        disp.add_handler(telegram.ext.CommandHandler("Train",self.Train))
         updater.start_polling()
         updater.idle()

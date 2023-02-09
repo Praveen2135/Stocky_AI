@@ -10,6 +10,12 @@ import datetime as dt
 import json
 import requests
 
+
+def roundoff2(x):
+    x = round(x,2)
+    return x
+
+
 # this will be used to conect and do all functions related to DataBase
 class StockyDb:
     def __init__(self):
@@ -203,6 +209,7 @@ class Portfolio():
         current_amt = hold_df['Current Value'].sum()
         
         hold_df['quantity']=hold_df['quantity'].astype('int')
+
         return hold_df, self.cash,amount_in,current_amt
 
     def get_user_name(self):
