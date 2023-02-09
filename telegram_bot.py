@@ -118,13 +118,11 @@ Please click here to explor
         name = data[username]
         feedback =context.args
         STF.get_feedback(name,feedback)
-        update.message.reply_text("Thanks for the valuable feedback  {name} .")
+        update.message.reply_text(f"Thanks for the valuable feedback  {name} .")
 
     def Train(self,update,context):
         ticker=context.args[0]
-        update.message.reply_text(f"""Traing is started for {ticker}, 
-                                    It will take 3 to 5 min, 
-                                    will update you once its Done! """)
+        update.message.reply_text(f"""Traing is started for {ticker}, It will take 3 to 5 min, will update you once its Done! """)
         Stocky_AI.StockyAiTrain(ticker)
         update.message.reply_text(f"Traing for {ticker} is completed")
     
