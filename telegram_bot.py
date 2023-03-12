@@ -52,7 +52,6 @@ class Telegram_bot():
         self.bot = telegram.Bot(token=self.Token)
         self.main()
         
-
     def start(self,update,context):
         user = update.message.from_user
         username = user.username
@@ -84,6 +83,8 @@ Please click here to explor
         /Recomndation
         /stock ticker (as per Yfinance)
         /Train ticker (as per Yfinance)
+        /Train_All re-train all ticker
+        /Pred_all for predict all tickers trained
         /Feedback your feedback""")
 
     def reco(self,update, context):
@@ -99,8 +100,6 @@ Please click here to explor
         update.message.reply_text('Sell Side')
         for index, row in sell.iterrows():
             update.message.reply_text(f"{row}")
-
-
 
     def stock(self,update, context):
         price = get_live_price(context.args[0])
@@ -123,10 +122,36 @@ Please click here to explor
 
     def Train(self,update,context):
         ticker=context.args[0]
-        update.message.reply_text(f"""Traing is started for {ticker}, It will take 3 to 5 min, will update you once its Done! """)
+        update.message.reply_text(f"""Training is started for {ticker}, It will take 3 to 5 min, will update you once its Done! """)
         Stocky_AI.StockyAiTrain(ticker)
-        update.message.reply_text(f"Traing for {ticker} is completed")
+        update.message.reply_text(f"Training for {ticker} is completed")
     
+    def Pred_all(self,update,context):
+        T_T=STU.get_T_tickers()
+        update.message.reply_text('Pridictions for all tickers are started...')
+        for i in T_T:
+            try:
+                Stocky_AI.StockyAIForcast(i)
+            except:
+                update.message.reply_text(f"The ticker {i} Was not available, So please train it.")
+        buy_df,sell_df=SD.Recomodation()
+        buy_df.to_csv("buy_df.csv")
+        sell_df.to_csv("sell_df.csv")
+        update.message.reply_text("Pridictions for all tickers are Done...!")
+
+    def Train_All(self,update,context):
+        T_T=STU.get_T_tickers()
+        for i in T_T:
+            try:
+                update.message.reply_text(f'Stocky AI started Learning abount ticker - {i}')
+                Stocky_AI.StockyAiTrain(i)
+                STU.trained_tickers(i)
+                update.message.reply_text(f'Training is done for ticker - {i}')
+                
+            except:
+                update.message.reply_text("Somthing went wrong, Please  reach out Admin")
+
+        update.message.reply_text('Stocky AI Learned abount all ticker...!')
 
     def get_holdings(self,update, context):
         user = update.message.from_user
@@ -155,5 +180,7 @@ Please click here to explor
         disp.add_handler(telegram.ext.CommandHandler("Recomndation",self.reco))
         disp.add_handler(telegram.ext.CommandHandler("Feedback",self.feedback))
         disp.add_handler(telegram.ext.CommandHandler("Train",self.Train))
+        disp.add_handler(telegram.ext.CommandHandler("Train ALL",self.Train_All))
+        disp.add_handler(telegram.ext.CommandHandler("Predect All",self.Pred_all))
         updater.start_polling()
         updater.idle()

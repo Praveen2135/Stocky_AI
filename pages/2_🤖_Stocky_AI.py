@@ -8,6 +8,10 @@ import datetime as dt
 import streamlit as st
 from streamlit_option_menu import option_menu
 import streamlit_lottie as st_l
+import sqlite3
+
+#Starting SQLite
+conn = sqlite3.connect("data.db")
 
 if st.session_state == {}:
     st.session_state['authentication_status'] = ""
@@ -43,15 +47,25 @@ if selected == "Predict":
     #st_lottie(robot,height=250,width=250, key='hello')
     if predictB:
         st_l.st_lottie(AI,height=250,width=250, key='AI')
-        Stocky_AI.StockyAIForcast(ticker)
-        st.success('Ticker Prediction Done...!')
+        try:
+            Stocky_AI.StockyAIForcast(ticker)
+            st.success('Ticker Prediction Done...!')
+        except:
+            st.warning(f"The ticker {ticker} Was not available, So please train it.")
 
     if prd_all:
         st_l.st_lottie(AI,height=250,width=250, key='AI')
         for i in T_T:
             print(i,'WIP')
-            Stocky_AI.StockyAIForcast(i)
+            try:
+                Stocky_AI.StockyAIForcast(i)
+            except:
+                st.warning(f"The ticker {i} Was not available, So please train it.")
             print(i,'Done')
+        buy_df,sell_df=SD.Recomodation()
+        buy_df.to_csv("buy_df.csv")
+        sell_df.to_csv("sell_df.csv")
+
         st.success('Ticker Prediction Done...!')
         
 
@@ -59,15 +73,29 @@ elif selected == 'Train':
     coder=SUI.load_lottiurl('https://assets7.lottiefiles.com/packages/lf20_ne6kcqfz.json')
     ticker=st.text_input('Ticker')
     trainB=st.button('Train')
+    train_all=st.button('Train All Trained Tickers')
     #st.write('''Note:- Please enter the Ticker as per Yahoo Finance and click on Train,
                         #If you want you can Quit it can train it self.
                         #You will get your ticker in Pridect Drop-down if its Trained''')
     if trainB:
         SPP.trained_tickers(ticker)
         st_l.st_lottie(coder,height=250,width=250, key='coder')
-        Stocky_AI.StockyAiTrain(ticker)
-        st.success('Stocky AI started Learning abount ticker')
-        
+        try:
+            Stocky_AI.StockyAiTrain(ticker)
+            st.success('Stocky AI started Learning abount ticker')
+        except:
+            st.warning("Somthing went wrong, Please  reach out Admin")
+
+    if train_all:
+        T_T=SPP.get_T_tickers()
+        st_l.st_lottie(coder,height=250,width=250, key='coder')
+        for i in T_T:
+            try:
+                Stocky_AI.StockyAiTrain(i)
+                SPP.trained_tickers(i)
+                st.success('Stocky AI started Learning abount ticker')
+            except:
+                st.warning("Somthing went wrong, Please  reach out Admin")
 
 elif selected == 'Predictions':
     tick_list = SD.get_all_ticker()

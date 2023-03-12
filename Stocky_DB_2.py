@@ -9,6 +9,8 @@ import time
 import datetime as dt
 import json
 import requests
+import SQL
+
 
 
 def roundoff2(x):
@@ -38,6 +40,9 @@ class StockyDb:
             high_.append(df['High'][i])
             low_.append(df['Low'][i])
             close_.append(df['Close'][i])
+        SQL.creat_table()
+        print('data')
+        SQL.add_data(ticker,date_,close_,high_,low_,open_)
         self.db.put({'key':ticker,'date':date_,'open':open_,'high':high_,'low':low_,'close':close_})
     
     def ticker_df(self,ticker):
@@ -68,8 +73,8 @@ class StockyDb:
                 price['H_buy_price']=L_min+(L_min*0.01)
                 price['H_sell_price']=H_max
                 price['L_sell_price']=H_max-(H_max*0.01)
-                price['Current price']= int(get_live_price(i))
-                price['profit% ']=((price['L_sell_price']-price['H_buy_price'])/price['H_buy_price'])*100
+                #price['Current price']= int(get_live_price(i))
+                #price['profit% ']=((price['L_sell_price']-price['H_buy_price'])/price['H_buy_price'])*100
                 buy.append(price)
             elif H_date<L_date:
                 price={}
@@ -78,18 +83,18 @@ class StockyDb:
                 price['L_sell_price']=H_max-(H_max*0.01)
                 price['L_buy_price']=L_min
                 price['H_buy_price']=L_min+(L_min*0.01)
-                price['Current price']= int(get_live_price(i))
-                price['profit%']=((price['L_sell_price']-price['H_buy_price'])/price['H_buy_price'])*100
+                #price['Current price']= int(get_live_price(i))
+                #price['profit%']=((price['L_sell_price']-price['H_buy_price'])/price['H_buy_price'])*100
                 sell.append(price)
         
         buy_df=pd.DataFrame()
         for i in range (0,len(buy)):
             buy_df=buy_df.append([buy[i]],ignore_index=True)
-        buy_df = buy_df[buy_df['profit% '] > 3]
+        #buy_df = buy_df[buy_df['profit% '] > 3]
         sell_df=pd.DataFrame()
         for j in range (0,len(sell)):
             sell_df=sell_df.append([sell[j]],ignore_index=True)
-        sell_df = sell_df[sell_df['profit%'] > 3]
+        #sell_df = sell_df[sell_df['profit%'] > 3]
 
         return buy_df,sell_df
         
