@@ -33,7 +33,7 @@ if st.session_state['authentication_status']:
     v1.subheader(int(amount_in))
     v2.subheader(int(current_amt))
     v3.subheader(int(net_PL))
-    v4.subheader(round(net_PL/amount_in,2))
+    v4.subheader(round(((net_PL/amount_in)*100),2))
     holdings = holdings.drop(['Invested Value','Current Value'],axis=1)
     st.table(holdings)
     p4,p5,p6 = st.columns(3)
