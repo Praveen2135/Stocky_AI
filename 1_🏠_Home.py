@@ -21,8 +21,11 @@ SP = Stocky_DB_2.Portfolio()
 SPP = Stocky_DB_2.Store_price()
 SUI = Stocky_DB_2.Ticker_UI()
 
-telegram_bot.Telegram_bot()
-
+try:
+    telegram_bot.Telegram_bot()
+except:
+    pass
+    
 c51,c52,c53 = st.columns(3)
 index=(c51.selectbox('Index',options=('^NSEI','^NSEBANK','^BSESN')))
 c52.metric(label='^NSEI',value=int(get_live_price('^NSEI')),delta=get_quote_data('^NSEI')['regularMarketChange'])
