@@ -47,7 +47,7 @@ class StockyAiTrain:
     def pre_pro_data(self):
         #creating object
         ticker_obj = yf.Ticker(self.ticker)
-        T_DF=ticker_obj.history(period='1y')
+        T_DF=ticker_obj.history(period='3y')
         #handeling the data
         T_DF.drop(['Dividends','Stock Splits','Volume'],axis=1,inplace=True)
         T_DF=T_DF.reset_index()
