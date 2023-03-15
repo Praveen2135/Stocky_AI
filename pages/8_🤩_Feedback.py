@@ -2,17 +2,17 @@ import streamlit_authenticator as stauth
 import streamlit as st
 from Stocky_DB_2 import credintials
 from streamlit_option_menu import option_menu
-import telegram_bot
+from telegram_bot import get_feedback
 
 
-bot = telegram_bot.Telegram_bot()
+
 SSF=credintials()
 name=st.text_input('Please Enter Name')
 feedback=st.text_area('Please Give your Feedback')
 submit=st.button("Submit")
 if submit:
     SSF.get_feedback(name,feedback)
-    bot.get_feedback(user_name=name,feedback=feedback)
+    get_feedback(user_name=name,feedback=feedback)
     st.success('Thank you for your valuable feedback')
 
 try:
