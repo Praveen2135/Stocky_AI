@@ -46,6 +46,14 @@ def T_get_holdings(user_name):
     hold_df['quantity']=hold_df['quantity'].astype('int')
     return hold_df,amount_in,current_amt
 
+#this function is to get feedback when any one gives feed back
+def get_feedback(user_name,feedback):
+    bot=telegram.Bot(token='5900892098:AAEHsv03l9Ow7LOc80re1ESq-sMu6VOvCXs')
+    chat_id =1015374223
+    bot.send_message(chat_id=chat_id,text=(f'User- {user_name},feedback- {feedback}'))
+
+
+
 class Telegram_bot():
     def __init__(self):
         self.Token='5900892098:AAEHsv03l9Ow7LOc80re1ESq-sMu6VOvCXs'
@@ -178,11 +186,7 @@ Please click here to explor
             Sign up here :- https://stockyai.streamlit.app/Sign_In 
             If already Signed up please rigester your Telegram Userid with us""")
 
-    # this function is to get feedback when any one gives feed back
-    def get_feedback(self,user_name,feedback):
-        bot=telegram.Bot(token=self.Token)
-        chat_id =1015374223
-        bot.send_message(chat_id=chat_id,text=(f'User- {user_name},feedback- {feedback}'))
+
 
     def buy_stock():
         pass
