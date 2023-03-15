@@ -40,9 +40,9 @@ class StockyDb:
             high_.append(df['High'][i])
             low_.append(df['Low'][i])
             close_.append(df['Close'][i])
-        SQL.creat_table()
-        print('data')
-        SQL.add_data(ticker,date_,close_,high_,low_,open_)
+        #SQL.creat_table()
+        #print('data')
+        #SQL.add_data(ticker,date_,close_,high_,low_,open_)
         self.db.put({'key':ticker,'date':date_,'open':open_,'high':high_,'low':low_,'close':close_})
     
     def ticker_df(self,ticker):

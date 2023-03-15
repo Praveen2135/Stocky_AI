@@ -2,18 +2,24 @@ import streamlit_authenticator as stauth
 import streamlit as st
 from Stocky_DB_2 import credintials
 from streamlit_option_menu import option_menu
+import telegram_bot
 
+
+bot = telegram_bot.Telegram_bot()
 SSF=credintials()
 name=st.text_input('Please Enter Name')
 feedback=st.text_area('Please Give your Feedback')
 submit=st.button("Submit")
 if submit:
     SSF.get_feedback(name,feedback)
+    bot.get_feedback(user_name=name,feedback=feedback)
     st.success('Thank you for your valuable feedback')
 
-
-if st.session_state == {}:
-    st.session_state['authentication_status'] = ""
+try:
+    if st.session_state == {}:
+        st.session_state['authentication_status'] = ""
+except:
+    pass
 
 # Admin Panil
 if st.session_state['username']=='praveen':

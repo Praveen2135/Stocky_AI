@@ -47,6 +47,8 @@ if selected == "Predict":
     #st_lottie(robot,height=250,width=250, key='hello')
     if predictB:
         st_l.st_lottie(AI,height=250,width=250, key='AI')
+        #Stocky_AI.StockyAIForcast(ticker)
+        #st.success('Ticker Prediction Done...!')
         try:
             Stocky_AI.StockyAIForcast(ticker)
             st.success('Ticker Prediction Done...!')

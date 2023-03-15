@@ -88,17 +88,25 @@ Please click here to explor
         /Feedback your feedback""")
 
     def reco(self,update, context):
-        buy, sell = STR.Recomodation()
-        buy= buy[buy['L_buy_price'] < buy['Current price']]
-        buy=buy[['Ticker','Current price','profit% ','L_sell_price','H_sell_price']]
-        sell= sell[sell['L_buy_price'] < sell['Current price']]
-        sell=sell[['Ticker','Current price','profit%','L_sell_price','H_sell_price']]
-        update.message.reply_text('Buy Side')
-        for index, row in buy.iterrows():
-            
-                update.message.reply_text(f"{row}")
+        buy_df=pd.read_csv("buy_df.csv")
+        sell_df=pd.read_csv("sell_df.csv")
+        
+        buy_df['Current price'] = buy_df['Ticker'].apply(lambda x : get_live_price(x))
+        sell_df['Current price'] = sell_df['Ticker'].apply(lambda x : get_live_price(x))
+
+        buy_df['profit%']=((buy_df['L_sell_price']-buy_df['H_buy_price'])/buy_df['H_buy_price'])*100
+        sell_df['profit%']=((sell_df['L_sell_price']-sell_df['H_buy_price'])/sell_df['H_buy_price'])*100
+        
+        buy_df= (buy_df[buy_df['L_buy_price'] < buy_df['Current price']])[buy_df['Current price'] < buy_df['H_buy_price']]
+        sell_df= (sell_df[sell_df['L_sell_price'] < sell_df['Current price']])[sell_df['Current price'] < sell_df['H_sell_price']]
+
+        buy_df = buy_df.drop(columns='Unnamed: 0',axis=1)
+        sell_df = sell_df.drop(columns='Unnamed: 0',axis=1)
+
+        for index, row in buy_df.iterrows():
+            update.message.reply_text(f"{row}")
         update.message.reply_text('Sell Side')
-        for index, row in sell.iterrows():
+        for index, row in sell_df.iterrows():
             update.message.reply_text(f"{row}")
 
     def stock(self,update, context):
@@ -132,6 +140,7 @@ Please click here to explor
         for i in T_T:
             try:
                 Stocky_AI.StockyAIForcast(i)
+                update.message.reply_text(f'Pridictions for ticker {i} is Done...')
             except:
                 update.message.reply_text(f"The ticker {i} Was not available, So please train it.")
         buy_df,sell_df=SD.Recomodation()
@@ -168,6 +177,18 @@ Please click here to explor
             update.message.reply_text("""Currently you dont have accses
             Sign up here :- https://stockyai.streamlit.app/Sign_In 
             If already Signed up please rigester your Telegram Userid with us""")
+
+    # this function is to get feedback when any one gives feed back
+    def get_feedback(self,user_name,feedback):
+        bot=telegram.Bot(token=self.Token)
+        chat_id =1015374223
+        bot.send_message(chat_id=chat_id,text=(f'User- {user_name},feedback- {feedback}'))
+
+    def buy_stock():
+        pass
+
+    def sell_stock():
+        pass
 
     def main(self):
         updater = telegram.ext.Updater(self.Token,use_context=True)
