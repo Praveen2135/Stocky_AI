@@ -134,6 +134,7 @@ Please click here to explor
         feedback =context.args
         feedback = ' '.join(feedback)
         STF.get_feedback(name,feedback)
+        get_feedback(name,feedback)
         update.message.reply_text(f"Thanks for the valuable feedback  {name} .")
 
     def Train(self,update,context):
