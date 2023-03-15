@@ -22,19 +22,23 @@ except:
     pass
 
 # Admin Panil
-if st.session_state['username']=='praveen':
+try:
+    if st.session_state['username']=='praveen':
 
-    selected = option_menu(
-        menu_title=None,
-        options=['Users','Feedback'],
-        icons=["projector-fill","terminal"],
-        orientation='horizontal',
-        styles={'nav-link':{'font-size':'15px'}})
-
-    if selected=="Users":
-        df = SSF.get_users_data()
-        st.table(df)
-
-    elif selected=="Feedback":
-        df=SSF.get_feedback_data()
-        st.table(df)
+        selected = option_menu(
+            menu_title=None,
+            options=['Users','Feedback'],
+            icons=["projector-fill","terminal"],
+            orientation='horizontal',
+            styles={'nav-link':{'font-size':'15px'}})
+    
+        if selected=="Users":
+            df = SSF.get_users_data()
+            st.table(df)
+    
+        elif selected=="Feedback":
+            df=SSF.get_feedback_data()
+            st.table(df)
+            
+except:
+    pass
