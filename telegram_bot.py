@@ -105,8 +105,11 @@ Please click here to explor
         buy_df['profit%']=((buy_df['L_sell_price']-buy_df['H_buy_price'])/buy_df['H_buy_price'])*100
         sell_df['profit%']=((sell_df['L_sell_price']-sell_df['H_buy_price'])/sell_df['H_buy_price'])*100
         
-        buy_df= (buy_df[buy_df['L_buy_price'] < buy_df['Current price']])[buy_df['Current price'] < buy_df['H_buy_price']]
-        sell_df= (sell_df[sell_df['L_sell_price'] < sell_df['Current price']])[sell_df['Current price'] < sell_df['H_sell_price']]
+        buy_df= (buy_df[buy_df['L_buy_price'] < buy_df['Current price']])
+        sell_df= (sell_df[sell_df['L_sell_price'] < sell_df['Current price']])
+
+        buy_df= buy_df[buy_df['profit%']>= 4]
+        sell_df= sell_df[sell_df['profit%']>= 4]
 
         buy_df = buy_df.drop(columns='Unnamed: 0',axis=1)
         sell_df = sell_df.drop(columns='Unnamed: 0',axis=1)
