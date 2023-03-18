@@ -55,8 +55,7 @@ def get_feedback(user_name,feedback):
 
 
 # Portfolio Handleing for telegram
-class Portfolio_for_telegram(user_name):
-    user_name=user_name
+class Portfolio_for_telegram():
 
     def __init__(self,user_name):
         self.user_name = user_name
