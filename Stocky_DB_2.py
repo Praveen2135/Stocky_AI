@@ -416,5 +416,25 @@ class credintials():
         return df
 
 
-        
+# This class will contain all small function which will cater the requirment of other functions
+class All_other_FX():
+    def __init__(self):
+        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.db = self.deta.Base('StockyAI')
+
+    # This function is to give a df of predicted and actual numbers
+    def Dash_board_df(self,ticker):
+        df=pd.DataFrame(self.db.get(key=ticker))
+        min_date=df['date'].min()
+        max_date=df['date'].max()
+        df2=get_data(ticker,start_date=min_date,end_date=max_date)
+        df2=df2.reset_index()
+        df2=df2.drop(columns=['adjclose','volume','ticker'],axis=1)
+        df2=df2.rename(columns={'index':'date1','close':'Actual close','high':'Actual high','low':'Actual low','open':'Actual open'})
+        df2['date1']=df2['date1'].dt.strftime('%Y-%m-%d')
+        new_df=pd.concat([df.reset_index(drop=True),df2.reset_index(drop=True)],axis=1)
+        #print(new_df)
+        return new_df
+
+
 
