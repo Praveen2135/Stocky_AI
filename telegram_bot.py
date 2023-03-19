@@ -330,12 +330,12 @@ Please click here to explor
             Sign up here :- https://stockyai.streamlit.app/Sign_In 
             If already Signed up please rigester your Telegram Userid with us""")
 
-
-
     def buy_stock(self,update,context):
         user = update.message.from_user
         username = user.username
         print(username)
+        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.dbp = self.deta.Base('StockyAI_portfolio')
         p_data = self.dbp.get(key=username)
         cash = p_data['cash']
         stocks = p_data['stocks']
