@@ -334,6 +334,7 @@ Please click here to explor
     def buy_stock(self,update,context):
         user = update.message.from_user
         username = user.username
+        print(username)
         self.p_data = self.dbp.get(key=username)
         self.cash = self.p_data['cash']
         self.stocks = self.p_data['stocks']
