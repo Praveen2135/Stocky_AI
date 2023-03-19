@@ -188,6 +188,8 @@ class Telegram_bot():
     def __init__(self):
         self.Token='5900892098:AAEHsv03l9Ow7LOc80re1ESq-sMu6VOvCXs'
         self.bot = telegram.Bot(token=self.Token)
+        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.dbp = self.deta.Base('StockyAI_portfolio')
         self.main()
         
     def start(self,update,context):
@@ -332,6 +334,9 @@ Please click here to explor
     def buy_stock(self,update,context):
         user = update.message.from_user
         username = user.username
+        self.p_data = self.dbp.get(key=self.username)
+        self.cash = self.p_data['cash']
+        self.stocks = self.p_data['stocks']
         tik= context.args[0]
         #ticker = yf.Ticker(ticker)
         price = get_live_price(tik)
@@ -379,6 +384,9 @@ Please click here to explor
     def sell_stock(self,update,context):
         user = update.message.from_user
         username = user.username
+        self.p_data = self.dbp.get(key=self.username)
+        self.cash = self.p_data['cash']
+        self.stocks = self.p_data['stocks']
         tik=context.args[0]
         price = get_live_price(tik)
         quant= context.args[1]
@@ -407,6 +415,9 @@ Please click here to explor
     def position(self,update,context):
         user = update.message.from_user
         username = user.username
+        self.p_data = self.dbp.get(key=self.username)
+        self.cash = self.p_data['cash']
+        self.stocks = self.p_data['stocks']
         hold_df = pd.DataFrame(self.p_data['stocks'])
         hold_df=hold_df.transpose()
         hold_df=hold_df.reset_index()
