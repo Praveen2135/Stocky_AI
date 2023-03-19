@@ -318,10 +318,7 @@ Please click here to explor
         if username in data.keys():
             hold_df,amount_in,current_amt = T_get_holdings(data[username])
             hold_df=hold_df[['index','quantity','P&L in %']]
-            update.message.reply_text(f'''Cash Available- {cash}
-                                    Amount Invested - {amount_in}
-                                    Current Value   - {current_amt}
-                                    Current Position- {round((((current_amt-amount_in)/amount_in)*100),2)}''')
+
             #update.message.reply_text(f"we got you {data[username]},your holdings :-")
             for index, row in hold_df.iterrows():
                 update.message.reply_text(f"{row}")
