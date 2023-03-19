@@ -282,6 +282,7 @@ Please click here to explor
         update.message.reply_text(f"Training for {ticker} is completed")
     
     def Pred_all(self,update,context):
+        update.message.reply_text('Its in WIP Currently')
         T_T=STU.get_T_tickers()
         update.message.reply_text('Pridictions for all tickers are started...')
         for i in T_T:
@@ -416,6 +417,7 @@ Please click here to explor
     def position(self,update,context):
         user = update.message.from_user
         username = user.username
+        print(username)
         self.p_data = self.dbp.get(key=username)
         self.cash = self.p_data['cash']
         self.stocks = self.p_data['stocks']
