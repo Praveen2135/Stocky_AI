@@ -336,52 +336,52 @@ Please click here to explor
         user = update.message.from_user
         username = user.username
         print(username)
-        self.p_data = self.dbp.get(key=username)
-        self.cash = self.p_data['cash']
-        self.stocks = self.p_data['stocks']
+        p_data = self.dbp.get(key=username)
+        cash = p_data['cash']
+        stocks = p_data['stocks']
         tik= context.args[0]
         #ticker = yf.Ticker(ticker)
         price = get_live_price(tik)
         quant= context.args[1]
         amt = price*quant
-        if tik in self.stocks.keys():
-            h_quant = self.stocks[tik]['quantity']
-            h_amt = h_quant*self.stocks[tik]['buy_price']
-            if self.cash >= amt:
-                self.cash=self.cash-amt
+        if tik in stocks.keys():
+            h_quant = stocks[tik]['quantity']
+            h_amt = h_quant*stocks[tik]['buy_price']
+            if cash >= amt:
+                cash=cash-amt
                 S_detail={}
                 S_detail['quantity'] = h_quant+quant
                 S_detail['buy_price']= (h_amt+amt)/(h_quant+quant)
-                self.stocks[tik]=S_detail
+                stocks[tik]=S_detail
                 #return self.stocks
-                self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
+                self.dbp.put({'key':username,'cash':cash,'stocks':stocks})
                 #self.Transactions(self.user_name,ticker,price,quant,'Buy')
                 update.message.reply_text('Stocks Brought')   
-                return True   
+                
                     
             else:
                 update.message.reply_text('INSUFICENT BALANCE')
-                return False
+            
 
 
         else:
             quant= quant
             amt = price*quant
-            if self.cash >= amt:
-                self.cash=self.cash-amt
+            if cash >= amt:
+                cash=cash-amt
                 S_detail={}
                 S_detail['quantity'] = quant
                 S_detail['buy_price']= price
-                self.stocks[tik]=S_detail
+                stocks[tik]=S_detail
                 #return self.stocks
-                self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
+                self.dbp.put({'key':username,'cash':cash,'stocks':stocks})
                 #self.Transactions(self.user_name,tik,price,quant,"Buy")
                 update.message.reply_text('Stocks Brought')
-                return True
+                
                 
             else:
                 update.message.reply_text('INSUFICENT BALANCE')
-                return False
+                
 
     def sell_stock(self,update,context):
         user = update.message.from_user
