@@ -223,8 +223,7 @@ Please click here to explor
         /Recomndation
         /stock ticker (as per Yfinance)
         /Buy ticker quantit
-        /Sell ticker quantit
-        /Position
+        /Sell ticker quantity
         /Train ticker (as per Yfinance)
         /Train_All re-train all ticker
         /Pred_all for predict all tickers trained
@@ -333,6 +332,9 @@ Please click here to explor
         print(username)
         self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
         self.dbp = self.deta.Base('StockyAI_portfolio')
+        T_db = self.deta.Base('StockyAI_home')
+        u_data= T_db.get(key='telegram_users')
+        username= u_data['data'][username]
         p_data = self.dbp.get(key=username)
         cash = p_data['cash']
         stocks = p_data['stocks']
@@ -383,6 +385,11 @@ Please click here to explor
     def sell_stock(self,update,context):
         user = update.message.from_user
         username = user.username
+        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.dbp = self.deta.Base('StockyAI_portfolio')
+        T_db = self.deta.Base('StockyAI_home')
+        u_data= T_db.get(key='telegram_users')
+        username= u_data['data'][username]
         self.p_data = self.dbp.get(key=username)
         self.cash = self.p_data['cash']
         self.stocks = self.p_data['stocks']
@@ -411,24 +418,7 @@ Please click here to explor
             update.message.reply_text('INSUFICENT Quantity')
             return False
 
-    def position(self,update,context):
-        user = update.message.from_user
-        username = user.username
-        print(username)
-        deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
-        dbp = deta.Base('StockyAI_portfolio')
-        p_data = dbp.get(key=username)
-        cash = p_data['cash']
-        stocks = p_data['stocks']
-        hold_df = pd.DataFrame(p_data['stocks'])
-        hold_df=hold_df.transpose()
-        hold_df=hold_df.reset_index()
-        amount_in= hold_df['Invested Value'].sum()
-        current_amt = hold_df['Current Value'].sum()
-        
-        hold_df['quantity']=hold_df['quantity'].astype('int')
-        update.message.reply_text(f'''Cash Available- {cash},Amount Invested - {amount_in}, Current Value   - {current_amt}, Current Position- {round((((current_amt-amount_in)/amount_in)*100),2)}''')
-
+    
     def main(self):
         updater = telegram.ext.Updater(self.Token,use_context=True)
         disp = updater.dispatcher
@@ -444,6 +434,6 @@ Please click here to explor
         disp.add_handler(telegram.ext.CommandHandler("Predect_All",self.Pred_all))
         disp.add_handler(telegram.ext.CommandHandler("Buy",self.buy_stock))
         disp.add_handler(telegram.ext.CommandHandler("Sell",self.sell_stock))
-        disp.add_handler(telegram.ext.CommandHandler("Position",self.position))
+        #disp.add_handler(telegram.ext.CommandHandler("Position",self.position))
         updater.start_polling()
         updater.idle()
