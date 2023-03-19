@@ -334,7 +334,7 @@ Please click here to explor
     def buy_stock(self,update,context):
         user = update.message.from_user
         username = user.username
-        self.p_data = self.dbp.get(key=self.username)
+        self.p_data = self.dbp.get(key=username)
         self.cash = self.p_data['cash']
         self.stocks = self.p_data['stocks']
         tik= context.args[0]
@@ -384,7 +384,7 @@ Please click here to explor
     def sell_stock(self,update,context):
         user = update.message.from_user
         username = user.username
-        self.p_data = self.dbp.get(key=self.username)
+        self.p_data = self.dbp.get(key=username)
         self.cash = self.p_data['cash']
         self.stocks = self.p_data['stocks']
         tik=context.args[0]
@@ -415,7 +415,7 @@ Please click here to explor
     def position(self,update,context):
         user = update.message.from_user
         username = user.username
-        self.p_data = self.dbp.get(key=self.username)
+        self.p_data = self.dbp.get(key=username)
         self.cash = self.p_data['cash']
         self.stocks = self.p_data['stocks']
         hold_df = pd.DataFrame(self.p_data['stocks'])
