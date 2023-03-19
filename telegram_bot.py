@@ -315,6 +315,10 @@ Please click here to explor
         if username in data.keys():
             hold_df,amount_in,current_amt = T_get_holdings(data[username])
             hold_df=hold_df[['index','quantity','P&L in %']]
+            update.message.reply_text(f'''Cash Available- {cash}
+                                    Amount Invested - {amount_in}
+                                    Current Value   - {current_amt}
+                                    Current Position- {round((((current_amt-amount_in)/amount_in)*100),2)}''')
             #update.message.reply_text(f"we got you {data[username]},your holdings :-")
             for index, row in hold_df.iterrows():
                 update.message.reply_text(f"{row}")
@@ -328,28 +332,92 @@ Please click here to explor
     def buy_stock(self,update,context):
         user = update.message.from_user
         username = user.username
-        buy=Portfolio_for_telegram(username)
-        tik=context.args[0]
-        qun=context.args[1]
-        buy.Buy(tik,qun)
+        tik= context.args[0]
+        #ticker = yf.Ticker(ticker)
+        price = get_live_price(tik)
+        quant= context.args[1]
+        amt = price*quant
+        if tik in self.stocks.keys():
+            h_quant = self.stocks[tik]['quantity']
+            h_amt = h_quant*self.stocks[tik]['buy_price']
+            if self.cash >= amt:
+                self.cash=self.cash-amt
+                S_detail={}
+                S_detail['quantity'] = h_quant+quant
+                S_detail['buy_price']= (h_amt+amt)/(h_quant+quant)
+                self.stocks[tik]=S_detail
+                #return self.stocks
+                self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
+                #self.Transactions(self.user_name,ticker,price,quant,'Buy')
+                update.message.reply_text('Stocks Brought')   
+                return True   
+                    
+            else:
+                update.message.reply_text('INSUFICENT BALANCE')
+                return False
+
+
+        else:
+            quant= quant
+            amt = price*quant
+            if self.cash >= amt:
+                self.cash=self.cash-amt
+                S_detail={}
+                S_detail['quantity'] = quant
+                S_detail['buy_price']= price
+                self.stocks[tik]=S_detail
+                #return self.stocks
+                self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
+                #self.Transactions(self.user_name,tik,price,quant,"Buy")
+                update.message.reply_text('Stocks Brought')
+                return True
+                
+            else:
+                update.message.reply_text('INSUFICENT BALANCE')
+                return False
 
     def sell_stock(self,update,context):
         user = update.message.from_user
         username = user.username
-        sell=Portfolio_for_telegram(username)
         tik=context.args[0]
-        qun=context.args[1]
-        sell.Sell(tik,qun)
+        price = get_live_price(tik)
+        quant= context.args[1]
+        amt = price*quant
+        if self.stocks[tik]['quantity']>= quant :
+            self.cash=self.cash+amt
+            r_quant = self.stocks[tik]['quantity']-quant
+            S_details=(self.stocks[tik])
+            S_details['quantity']=r_quant
+            self.stocks[tik]=S_details
+            #print(self.stocks[tik])
+            #return self.stocks
+            self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
+            #self.Transactions(self.user_name,tik,price,quant,"Sell")
+            update.message.reply_text('Stocks Sold')
+            return True
+
+        elif tik not in self.stocks.keys():
+            update.message.reply_text("Short sell is not Allowed...!")
+            return False
+
+        else:
+            update.message.reply_text('INSUFICENT Quantity')
+            return False
 
     def position(self,update,context):
         user = update.message.from_user
         username = user.username
-        pos=Portfolio_for_telegram(username)
-        cash,amount_in,current_amount=pos.get_holdings()
+        hold_df = pd.DataFrame(self.p_data['stocks'])
+        hold_df=hold_df.transpose()
+        hold_df=hold_df.reset_index()
+        amount_in= hold_df['Invested Value'].sum()
+        current_amt = hold_df['Current Value'].sum()
+        
+        hold_df['quantity']=hold_df['quantity'].astype('int')
         update.message.reply_text(f'''Cash Available- {cash}
                                     Amount Invested - {amount_in}
-                                    Current Value   - {current_amount}
-                                    Current Position- {round((((current_amount-amount_in)/amount_in)*100),2)}''')
+                                    Current Value   - {current_amt}
+                                    Current Position- {round((((current_amt-amount_in)/amount_in)*100),2)}''')
 
     def main(self):
         updater = telegram.ext.Updater(self.Token,use_context=True)
