@@ -76,7 +76,7 @@ class Portfolio_for_telegram():
     def Buy (self,ticker,quant):
         tik= ticker
         #ticker = yf.Ticker(ticker)
-        price = get_live_price(tik)
+        price = int(get_live_price(tik))
         quant= quant
         amt = price*quant
         if tik in self.stocks.keys():
@@ -120,7 +120,7 @@ class Portfolio_for_telegram():
 
     def Sell (self,ticker,quant):
         tik=ticker
-        price = get_live_price(tik)
+        price = int(get_live_price(tik))
         quant= quant
         amt = price*quant
         if self.stocks[tik]['quantity']>= quant :
