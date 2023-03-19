@@ -415,20 +415,19 @@ Please click here to explor
         user = update.message.from_user
         username = user.username
         print(username)
-        self.p_data = self.dbp.get(key=username)
-        self.cash = self.p_data['cash']
-        self.stocks = self.p_data['stocks']
-        hold_df = pd.DataFrame(self.p_data['stocks'])
+        deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        dbp = deta.Base('StockyAI_portfolio')
+        p_data = dbp.get(key=username)
+        cash = p_data['cash']
+        stocks = p_data['stocks']
+        hold_df = pd.DataFrame(p_data['stocks'])
         hold_df=hold_df.transpose()
         hold_df=hold_df.reset_index()
         amount_in= hold_df['Invested Value'].sum()
         current_amt = hold_df['Current Value'].sum()
         
         hold_df['quantity']=hold_df['quantity'].astype('int')
-        update.message.reply_text(f'''Cash Available- {cash}
-                                    Amount Invested - {amount_in}
-                                    Current Value   - {current_amt}
-                                    Current Position- {round((((current_amt-amount_in)/amount_in)*100),2)}''')
+        update.message.reply_text(f'''Cash Available- {cash},Amount Invested - {amount_in}, Current Value   - {current_amt}, Current Position- {round((((current_amt-amount_in)/amount_in)*100),2)}''')
 
     def main(self):
         updater = telegram.ext.Updater(self.Token,use_context=True)
