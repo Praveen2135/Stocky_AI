@@ -21,7 +21,7 @@ def roundoff2(x):
 # this will be used to conect and do all functions related to DataBase
 class StockyDb:
     def __init__(self):
-        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.deta = Deta('API Key')
         self.db = self.deta.Base('StockyAI')
         
     def save_to_DB(self,ticker,df):
@@ -419,7 +419,7 @@ class credintials():
 # This class will contain all small function which will cater the requirment of other functions
 class All_other_FX():
     def __init__(self):
-        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.deta = Deta('API Key')
         self.db = self.deta.Base('StockyAI')
 
     # This function is to give a df of predicted and actual numbers
