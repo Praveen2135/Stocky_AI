@@ -155,7 +155,7 @@ Please click here to explor
 
     def Train(self,update,context):
         ticker=context.args[0]
-        update.message.reply_text(f"""Training is started for {ticker}, It will take 3 to 5 min, will update you once its Done! """)
+        update.message.reply_text(f"""Training is started for {ticker}, It will take 10 to 15 min, will update you once its Done! """)
         Stocky_AI.StockyAiTrain(ticker)
         update.message.reply_text(f"Training for {ticker} is completed")
     
