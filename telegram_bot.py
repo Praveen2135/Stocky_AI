@@ -209,22 +209,22 @@ Please click here to explor
         user = update.message.from_user
         username = user.username
         print(username)
-        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
-        self.dbp = self.deta.Base('StockyAI_portfolio')
-        T_db = self.deta.Base('StockyAI_home')
+        deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        dbp = deta.Base('StockyAI_portfolio')
+        T_db = deta.Base('StockyAI_home')
         u_data= T_db.get(key='telegram_users')
         username= u_data['data'][username]
-        p_data = self.dbp.get(key=username)
+        p_data = dbp.get(key=username)
         cash = p_data['cash']
         stocks = p_data['stocks']
         tik= context.args[0]
-        #ticker = yf.Ticker(ticker)
-        price = get_live_price(tik)
-        quant= context.args[1]
+        price = (get_live_price(tik))
+        quant= int(context.args[1])
         amt = price*quant
         if tik in stocks.keys():
             h_quant = stocks[tik]['quantity']
             h_amt = h_quant*stocks[tik]['buy_price']
+            print(cash)
             if cash >= amt:
                 cash=cash-amt
                 S_detail={}
@@ -232,8 +232,8 @@ Please click here to explor
                 S_detail['buy_price']= (h_amt+amt)/(h_quant+quant)
                 stocks[tik]=S_detail
                 #return self.stocks
-                self.dbp.put({'key':username,'cash':cash,'stocks':stocks})
-                #self.Transactions(self.user_name,ticker,price,quant,'Buy')
+                dbp.put({'key':username,'cash':cash,'stocks':stocks})
+                Transactions(username,tik,price,quant,'Buy')
                 update.message.reply_text('Stocks Brought')   
                 
                     
@@ -252,8 +252,8 @@ Please click here to explor
                 S_detail['buy_price']= price
                 stocks[tik]=S_detail
                 #return self.stocks
-                self.dbp.put({'key':username,'cash':cash,'stocks':stocks})
-                #self.Transactions(self.user_name,tik,price,quant,"Buy")
+                dbp.put({'key':username,'cash':cash,'stocks':stocks})
+                Transactions(username,tik,price,quant,"Buy")
                 update.message.reply_text('Stocks Brought')
                 
                 
@@ -261,42 +261,41 @@ Please click here to explor
                 update.message.reply_text('INSUFICENT BALANCE')
                 
 
-    def sell_stock(self,update,context):
-        user = update.message.from_user
-        username = user.username
-        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
-        self.dbp = self.deta.Base('StockyAI_portfolio')
-        T_db = self.deta.Base('StockyAI_home')
-        u_data= T_db.get(key='telegram_users')
-        username= u_data['data'][username]
-        self.p_data = self.dbp.get(key=username)
-        self.cash = self.p_data['cash']
-        self.stocks = self.p_data['stocks']
-        tik=context.args[0]
-        price = get_live_price(tik)
-        quant= context.args[1]
-        amt = price*quant
-        if self.stocks[tik]['quantity']>= quant :
-            self.cash=self.cash+amt
-            r_quant = self.stocks[tik]['quantity']-quant
-            S_details=(self.stocks[tik])
-            S_details['quantity']=r_quant
-            self.stocks[tik]=S_details
-            #print(self.stocks[tik])
-            #return self.stocks
-            self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
-            #self.Transactions(self.user_name,tik,price,quant,"Sell")
-            update.message.reply_text('Stocks Sold')
-            return True
+    def sell_stock(update,context):
+      user = update.message.from_user
+      username = user.username
+      deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+      dbp = deta.Base('StockyAI_portfolio')
+      T_db = deta.Base('StockyAI_home')
+      u_data= T_db.get(key='telegram_users')
+      username= u_data['data'][username]
+      p_data = dbp.get(key=username)
+      cash = p_data['cash']
+      stocks = p_data['stocks']
+      tik=context.args[0]
+      price = get_live_price(tik)
+      quant= int(context.args[1])
+      amt = price*quant
+      if stocks[tik]['quantity']>= quant :
+        cash=cash+amt
+        r_quant = stocks[tik]['quantity']-quant
+        S_details=(stocks[tik])
+        S_details['quantity']=r_quant
+        stocks[tik]=S_details
+        print(stocks[tik])
+        #return self.stocks
+        dbp.put({'key':username,'cash':cash,'stocks':stocks})
+        Transactions(username,tik,price,quant,"Sell")
+        update.message.reply_text('Stocks Sold')
+        return True
 
-        elif tik not in self.stocks.keys():
-            update.message.reply_text("Short sell is not Allowed...!")
-            return False
+      elif tik not in stocks.keys():
+        update.message.reply_text("Short sell is not Allowed...!")
+        return False
 
-        else:
-            update.message.reply_text('INSUFICENT Quantity')
-            return False
-
+      else:
+        update.message.reply_text('INSUFICENT Quantity')
+        return False
     
     def main(self):
         updater = telegram.ext.Updater(self.Token,use_context=True)
