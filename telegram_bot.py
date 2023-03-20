@@ -19,7 +19,7 @@ data = STU.get_tele_user()
 
 def T_get_holdings(user_name):
     #print(self.p_data['stocks'])
-    deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+    deta = Deta('API Key')
     dbp = deta.Base('StockyAI_portfolio')
     p_data = dbp.get(key=user_name)
     hold_df = pd.DataFrame(p_data['stocks'])
@@ -49,13 +49,13 @@ def T_get_holdings(user_name):
 
 #this function is to get feedback when any one gives feed back
 def get_feedback(user_name,feedback):
-    bot=telegram.Bot(token='5900892098:AAEHsv03l9Ow7LOc80re1ESq-sMu6VOvCXs')
-    chat_id =1015374223
+    bot=telegram.Bot(token='Telegram Token')
+    chat_id ='ADMIN Chat ID'
     bot.send_message(chat_id=chat_id,text=(f'User- {user_name},feedback- {feedback}'))
 
 def Transactions(user,ticker,price,quantity,str):
   now = dt.datetime.now()
-  deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+  deta = Deta('API Key')
   db_tran = deta.Base('transactions')
   date = now.strftime("%d-%m-%Y")
   trans=db_tran.get(key=user)['transaction']
@@ -65,9 +65,9 @@ def Transactions(user,ticker,price,quantity,str):
 
 class Telegram_bot():
     def __init__(self):
-        self.Token='5900892098:AAEHsv03l9Ow7LOc80re1ESq-sMu6VOvCXs'
+        self.Token='Telegram Token'
         self.bot = telegram.Bot(token=self.Token)
-        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.deta = Deta('API Key')
         self.dbp = self.deta.Base('StockyAI_portfolio')
         self.main()
         
@@ -209,7 +209,7 @@ Please click here to explor
         user = update.message.from_user
         username = user.username
         print(username)
-        deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        deta = Deta('API Kye')
         dbp = deta.Base('StockyAI_portfolio')
         T_db = deta.Base('StockyAI_home')
         u_data= T_db.get(key='telegram_users')
@@ -264,7 +264,7 @@ Please click here to explor
     def sell_stock(self,update,context):
       user = update.message.from_user
       username = user.username
-      deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+      deta = Deta('API Key')
       dbp = deta.Base('StockyAI_portfolio')
       T_db = deta.Base('StockyAI_home')
       u_data= T_db.get(key='telegram_users')
