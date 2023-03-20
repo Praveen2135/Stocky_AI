@@ -103,7 +103,7 @@ class StockyDb:
 class Portfolio():
     def __init__(self):
         self.user_name = self.get_user_name()
-        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.deta = Deta('API Key')
         self.dbp = self.deta.Base('StockyAI_portfolio')
         self.db_tran = self.deta.Base('transactions')
         self.p_data = self.dbp.get(key=self.user_name)
