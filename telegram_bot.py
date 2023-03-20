@@ -53,135 +53,14 @@ def get_feedback(user_name,feedback):
     chat_id =1015374223
     bot.send_message(chat_id=chat_id,text=(f'User- {user_name},feedback- {feedback}'))
 
-
-# Portfolio Handleing for telegram
-class Portfolio_for_telegram():
-
-    def __init__(self,user_name):
-        self.user_name = user_name
-        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
-        self.dbp = self.deta.Base('StockyAI_portfolio')
-        self.db_tran = self.deta.Base('transactions')
-        self.p_data = self.dbp.get(key=self.user_name)
-        self.cash = self.p_data['cash']
-        self.stocks = self.p_data['stocks']
-        self.N50List=tickers_nifty50()
-        self.now = dt.datetime.now()
-        
-        #return self.p_data['cash']
-        #self.S_df = pd.DataFrame(columns=['stock','buy_price','quantity'])
-        #self.S_df=self.S_df.append(self.stocks,ignore_index=True)
-        #print(self.stocks)
-        
-    def Buy (self,ticker,quant):
-        tik= ticker
-        #ticker = yf.Ticker(ticker)
-        price = int(get_live_price(tik))
-        quant= quant
-        amt = price*quant
-        if tik in self.stocks.keys():
-            h_quant = self.stocks[tik]['quantity']
-            h_amt = h_quant*self.stocks[tik]['buy_price']
-            if self.cash >= amt:
-                self.cash=self.cash-amt
-                S_detail={}
-                S_detail['quantity'] = h_quant+quant
-                S_detail['buy_price']= (h_amt+amt)/(h_quant+quant)
-                self.stocks[tik]=S_detail
-                #return self.stocks
-                self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
-                #self.Transactions(self.user_name,ticker,price,quant,'Buy')
-                update.message.reply_text('Stocks Brought')   
-                return True   
-                    
-            else:
-                update.message.reply_text('INSUFICENT BALANCE')
-                return False
-
-
-        else:
-            quant= quant
-            amt = price*quant
-            if self.cash >= amt:
-                self.cash=self.cash-amt
-                S_detail={}
-                S_detail['quantity'] = quant
-                S_detail['buy_price']= price
-                self.stocks[tik]=S_detail
-                #return self.stocks
-                self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
-                #self.Transactions(self.user_name,tik,price,quant,"Buy")
-                update.message.reply_text('Stocks Brought')
-                return True
-                
-            else:
-                update.message.reply_text('INSUFICENT BALANCE')
-                return False
-
-    def Sell (self,ticker,quant):
-        tik=ticker
-        price = int(get_live_price(tik))
-        quant= quant
-        amt = price*quant
-        if self.stocks[tik]['quantity']>= quant :
-            self.cash=self.cash+amt
-            r_quant = self.stocks[tik]['quantity']-quant
-            S_details=(self.stocks[tik])
-            S_details['quantity']=r_quant
-            self.stocks[tik]=S_details
-            #print(self.stocks[tik])
-            #return self.stocks
-            self.dbp.put({'key':self.user_name,'cash':self.cash,'stocks':self.stocks})
-            #self.Transactions(self.user_name,tik,price,quant,"Sell")
-            update.message.reply_text('Stocks Sold')
-            return True
-
-        elif tik not in self.stocks.keys():
-            update.message.reply_text("Short sell is not Allowed...!")
-            return False
-
-        else:
-            update.message.reply_text('INSUFICENT Quantity')
-            return False
-
-
-    def get_holdings(self):
-        #print(self.p_data['stocks'])
-        hold_df = pd.DataFrame(self.p_data['stocks'])
-        hold_df=hold_df.transpose()
-        hold_df=hold_df.reset_index()
-        amount_in= hold_df['Invested Value'].sum()
-        current_amt = hold_df['Current Value'].sum()
-        
-        hold_df['quantity']=hold_df['quantity'].astype('int')
-
-        return self.cash,amount_in,current_amt
-
-    def get_user_name(self):
-        User_N=""
-        if st.session_state['authentication_status']:
-            User_N = st.session_state['username']
-        else:
-            User_N='dume'
-
-        return User_N
-
-    def Transactions(self,user,ticker,price,quantity,str):
-        date = self.now.strftime("%d-%m-%Y")
-        trans=self.db_tran.get(key=user)['transaction']
-        trans.append({'Date':date,'Ticker':ticker,'Price':price,'Quantity':quantity,'Action':str})
-        self.db_tran.put({'key':user,'transaction':trans})
-
-    def Demo_Trans(self,user):
-        self.db_tran.put({'key':user,'transaction':[]})
-
-
-    def get_transactions(self,user):
-        tran=self.db_tran.get(key=user)['transaction']
-        T_df = pd.DataFrame(tran)
-        T_df=T_df[['Date','Ticker','Price','Quantity','Action']]
-        return T_df
-
+def Transactions(user,ticker,price,quantity,str):
+  now = dt.datetime.now()
+  deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+  db_tran = deta.Base('transactions')
+  date = now.strftime("%d-%m-%Y")
+  trans=db_tran.get(key=user)['transaction']
+  trans.append({'Date':date,'Ticker':ticker,'Price':price,'Quantity':quantity,'Action':str})
+  db_tran.put({'key':user,'transaction':trans})
 
 
 class Telegram_bot():
