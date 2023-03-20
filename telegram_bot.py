@@ -261,7 +261,7 @@ Please click here to explor
                 update.message.reply_text('INSUFICENT BALANCE')
                 
 
-    def sell_stock(update,context):
+    def sell_stock(self,update,context):
       user = update.message.from_user
       username = user.username
       deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
