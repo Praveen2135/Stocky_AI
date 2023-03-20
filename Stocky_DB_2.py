@@ -251,7 +251,7 @@ class Portfolio():
 class Store_price():
 
     def __init__(self):
-        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.deta = Deta('API Key')
         self.dbh = self.deta.Base('StockyAI_home')
 
     def save_perv_price(self):
@@ -377,7 +377,7 @@ class Ticker_UI():
 
 class credintials():
     def __init__(self):
-        self.deta = Deta('d0p5if1f_GSnmoPk32YPhwKaJzN6sq7hM2DN4XPks')
+        self.deta = Deta('API Key')
         self.dbc = self.deta.Base('credintials')
         self.dbp = self.deta.Base('StockyAI_portfolio')
         self.dbf = self.deta.Base('feedback')
