@@ -25,7 +25,7 @@ except:
 
 # Admin Panil
 try:
-    if st.session_state['username']=='praveen':
+    if st.session_state['username']=='ADMIN USER ID':
 
         selected = option_menu(
             menu_title=None,
